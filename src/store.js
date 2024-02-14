@@ -1,5 +1,7 @@
 import {createSlice, configureStore} from '@reduxjs/toolkit'
 
+const authService = () => {};
+
 const counterSlice = createSlice({
   name: 'main',
   initialState: {
@@ -7,8 +9,8 @@ const counterSlice = createSlice({
   },
   reducers: {
     initMe: (state, action) => {
-      const {name, email, token} = action.payload;
-      state.me = {name, email, token};
+      const {name = '', email, token} = action.payload;
+      Object.assign(state.me, {name, email, token});
     },
     dropMe: state => {
       state.me = {name: '', email: '', token: ''};
@@ -16,11 +18,17 @@ const counterSlice = createSlice({
   }
 })
 
-export const {dropMe} = counterSlice.actions
+export const {dropMe, initMe} = counterSlice.actions
 
 const store = configureStore({
-  reducer: counterSlice.reducer
-})
+  reducer: counterSlice.reducer,
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      thunk: {
+        extraArgument: authService,
+      }
+    })
+});
 
 export const selectToken = state => state.me.token;
 export const selectMe = state => state.me;

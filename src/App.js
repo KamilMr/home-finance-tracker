@@ -11,10 +11,7 @@ import {
 } from 'react-router-dom';
 import {useSelector} from 'react-redux';
 import {selectToken} from './store';
-
-const Login = () => {
-  return <h1>Lgoin</h1>
-};
+import Login from './Login';
 
 const Protected = ({children}) => {
   const token = useSelector(selectToken);
