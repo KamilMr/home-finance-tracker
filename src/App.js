@@ -1,36 +1,65 @@
-import React, { useState, useEffect } from 'react';
+import {Box, Container} from '@mui/material';
+import React from 'react';
+import {Cats} from './Cats';
+import AccountMenu from './Nav';
+import {Navigate} from "react-router-dom";
+
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Outlet,
+} from 'react-router-dom';
+
+const Login = () => {
+  return <h1>Lgoin</h1>
+};
+
+const Protected = ({children}) => {
+  const token = true;
+  if (!token) return <Navigate to="/login" />
+
+  return children;
+};
+
+const Layout = ({children}) => {
+  return (
+    <Container>
+      <Box>
+        <AccountMenu />
+        {children}
+      </Box>
+    </Container>
+  );
+};
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: (
+      <Protected>
+        <Layout>
+          <Outlet />
+        </Layout>
+      </Protected>
+    ),
+    children: [
+      {
+        path: 'cats',
+        element: <Cats />
+      },
+    ]
+  },
+  {
+    path: '/login',
+    element: <Login />
+  }
+]);
 
 const App = () => {
-  const [catData, setCatData] = useState(null);
-
-  useEffect(() => {
-    fetch('https://cataas.com/cat?json=true')
-      .then(response => response.json())
-      .then(data => {
-        setCatData(data);
-      })
-      .catch(error => console.error('Error fetching data: ', error));
-  }, []);
-
-  // Styles for centering the image
-  const imageContainerStyle = {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'column',
-  };
-
   return (
-    <div>
-      <h1 style={{ textAlign: 'center' }}>Robaczek</h1>
-      {catData && (
-        <div style={imageContainerStyle}>
-          <img src={`https://cataas.com/cat/${catData._id}`} alt="Random Cat" style={{ maxWidth: '100%', height: 'auto' }} />
-          <p>Tags: {catData.tags.join(', ')}</p>
-        </div>
-      )}
-    </div>
+    <RouterProvider router={router} />
   );
 };
 
 export default App;
+
