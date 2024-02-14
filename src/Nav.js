@@ -1,16 +1,21 @@
 import {Button} from '@mui/base';
 import {Container} from '@mui/system';
+import {useDispatch, useSelector} from 'react-redux';
 import {Link, useNavigate} from 'react-router-dom';
+import {selectToken, dropMe} from './store';
 
 const AuthButton = () => {
-  const isLogged = false;
+  const isLogged = useSelector(selectToken);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleNavigate = () => {
     navigate('/login');
   };
 
-  const handleLogout = () => {};
+  const handleLogout = () => {
+    dispatch(dropMe);
+  };
 
   if (!isLogged) return (
     <Button onClick={handleNavigate}>Login</Button>
@@ -18,7 +23,7 @@ const AuthButton = () => {
 
   return (
     <>
-    <Button onClick={handleLogout}>Login</Button>
+    <Button onClick={handleLogout}>Logout</Button>
     </>
   );
 };

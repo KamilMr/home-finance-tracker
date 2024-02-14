@@ -9,13 +9,15 @@ import {
   RouterProvider,
   Outlet,
 } from 'react-router-dom';
+import {useSelector} from 'react-redux';
+import {selectToken} from './store';
 
 const Login = () => {
   return <h1>Lgoin</h1>
 };
 
 const Protected = ({children}) => {
-  const token = true;
+  const token = useSelector(selectToken);
   if (!token) return <Navigate to="/login" />
 
   return children;
