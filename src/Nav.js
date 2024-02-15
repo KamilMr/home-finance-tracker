@@ -2,7 +2,6 @@ import {Button} from '@mui/base';
 import {Container} from '@mui/system';
 import {useDispatch, useSelector} from 'react-redux';
 import {Link, useNavigate} from 'react-router-dom';
-import {getURL} from './common';
 import {useFetch} from './hooks';
 import {selectToken, dropMe} from './store';
 
