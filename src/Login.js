@@ -7,13 +7,14 @@ import {initMe} from './store';
 import {useNavigate} from 'react-router-dom';
 import {useFetch} from './hooks';
 
-const URL = process.env.REACT_APP_BE_URL;
+const EMAIL = process.env.REACT_APP_EMAIL;
+const PASS = process.env.REACT_APP_PASSWORD;
 
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [email, setEmail] = useState('kamil.mrowka@gmail.com');
-  const [password, setPassword] = useState('KamilTest1!');
+  const [email, setEmail] = useState(EMAIL);
+  const [password, setPassword] = useState(PASS);
 
   const cf = useFetch();
 
