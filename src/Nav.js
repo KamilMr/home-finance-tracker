@@ -37,8 +37,8 @@ const AccountMenu = () => {
       <Container sx={{
         textAlign: 'right',
       }}>
-        <Link style={{marginRight: 12}} to={'/cats'}>Cats</Link>
-        <Link style={{marginRight: 12}} to={'/'}>App</Link>
+        <Link style={{marginRight: 12}} to={'/cats'}>Kotki</Link>
+        <Link style={{marginRight: 12}} to={'/expense-list'}>Wydatki</Link>
         <AuthButton />
       </Container>
     </nav>
