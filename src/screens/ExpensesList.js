@@ -54,14 +54,27 @@ const ExpensesList = () => {
 
   const handleReload = () => setReload(!reload);
   const handleEdit = id => () => navigate(`/expense-list/${id}`);
-  const handleDelete = id => () => {
-    // add handle delete
+  const handleDelete = id => async () => {
+    let resp;
+    try {
+      resp = await cf({
+        path: `expenses/${id}`,
+        method: 'DELETE',
+      }).then(res => res.json());
+    } catch (err) {
+      console.log(err);
+      return;
+    }
+    if (typeof resp.err === 'string') {
+      console.log(resp.err);
+      return;
+    }
+
+    dispatch(addExpense(resp.d));
   };
 
   return (
-    <Container sx={{
-
-    }}>
+    <Container>
       <Box sx={{
         display: 'flex',
         justifyContent: 'space-between',
@@ -73,9 +86,9 @@ const ExpensesList = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>opis</TableCell>
-              <TableCell>data</TableCell>
-              <TableCell>cena</TableCell>
+              <TableCell>Opis</TableCell>
+              <TableCell>Data</TableCell>
+              <TableCell>Cena</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -83,13 +96,13 @@ const ExpensesList = () => {
               <React.Fragment key={exp.id}>
                 <TableRow>
                   <TableCell
-                    sx={{borderBottom: 'none'}}
+                    sx={{borderBottom: 'none', p: 0}}
                   >{exp.description}</TableCell>
                   <TableCell
-                    sx={{borderBottom: 'none'}}
+                    sx={{borderBottom: 'none', p: 0}}
                   >{exp.date}</TableCell>
                   <TableCell
-                    sx={{borderBottom: 'none'}}
+                    sx={{borderBottom: 'none', p: 0, textAlign: 'center'}}
                   >{exp.price}</TableCell>
                 </TableRow>
                 <TableRow>
@@ -101,7 +114,7 @@ const ExpensesList = () => {
                       m: 0,
                       p: 0,
                     }}>
-                    <IconButton onClick={handleDelete}>
+                    <IconButton onClick={handleDelete(exp.id)}>
                       <DeleteIcon />
                     </IconButton>
                     <IconButton onClick={handleEdit(exp.id)}>

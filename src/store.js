@@ -27,7 +27,8 @@ const counterSlice = createSlice({
     },
     dropMe: state => {
       state.me = {name: '', email: '', token: ''};
-    }
+    },
+    deleteExpense: () => {},
   }
 })
 
@@ -54,6 +55,7 @@ export const selectExpense = id => createSelector(
   [selectCategories, selectExpenses],
   (cat, exp) => {
     const expense = exp.find(ex => ex.id == id);
+    if (!expense) return;
     const category = cat.find(obj => obj.catId === +id)?.category || '';
     return {...expense, category};
   }

@@ -23,6 +23,7 @@ const ExpenseAddEdit = () => {
   const categories = useSelector(selectCategories);
   const navigate = useNavigate();
   const savedExpense = useSelector(selectExpense(param)) || emptyState();
+  console.log(savedExpense);
   const [expense, setExpense] = useState(savedExpense);
 
   const handleSave = async (d) => {
@@ -31,8 +32,8 @@ const ExpenseAddEdit = () => {
     let resp;
     try {
       resp = await cf({
-        path: `expenses/${param ? param : ''}`,
-        method: param ? 'PUT' : 'POST',
+        path: `expenses/${!isNaN(param) ? param : ''}`,
+        method: !isNaN(param) ? 'PUT' : 'POST',
         headers: {
           'Content-type': 'application/json'
         },
