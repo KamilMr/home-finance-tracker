@@ -26,16 +26,17 @@ const ExpenseAddEdit = () => {
   const [expense, setExpense] = useState(savedExpense);
 
   const handleSave = async (d) => {
-    const newD = _.omitBy(d, (d) => !d);
+    const newD = _.omitBy(d, (d) => !d || d === 'undefined');
+    const {description, categoryId, date, price} = newD;
     let resp;
     try {
       resp = await cf({
-        path: 'expenses',
-        method: 'POST',
+        path: `expenses/${param ? param : ''}`,
+        method: param ? 'PUT' : 'POST',
         headers: {
           'Content-type': 'application/json'
         },
-        body: newD,
+        body: {description, categoryId, date, price},
       }).then(res => res.json());
     }catch (err) {
       console.log(err);

@@ -1,9 +1,10 @@
-import {Button, Table, TableContainer, TableHead, TableCell, TableRow, TableBody, Fab} from '@mui/material';
+import {Button, Table, TableContainer, TableHead, TableCell, TableRow, TableBody, Fab, IconButton} from '@mui/material';
 import {Box, Container} from '@mui/system';
 
 import AddIcon from '@mui/icons-material/Add';
-import {format} from 'date-fns';
-import {useEffect, useState} from 'react';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFetch} from '../hooks';
 import {addExpense, selectExpenses} from '../store';
@@ -25,6 +26,7 @@ const AddBtn = () => {
 
 const ExpensesList = () => {
   const cf = useFetch();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const expenses = useSelector(selectExpenses);
   const [reload, setReload] = useState(false);
@@ -51,6 +53,10 @@ const ExpensesList = () => {
   }, [reload]);
 
   const handleReload = () => setReload(!reload);
+  const handleEdit = id => () => navigate(`/expense-list/${id}`);
+  const handleDelete = id => () => {
+    // add handle delete
+  };
 
   return (
     <Container sx={{
@@ -74,11 +80,36 @@ const ExpensesList = () => {
           </TableHead>
           <TableBody>
             {expenses.map(exp => (
-              <TableRow key={exp.id}>
-                <TableCell>{exp.description}</TableCell>
-                <TableCell>{format(exp.date, 'dd/MM/yyyy')}</TableCell>
-                <TableCell>{exp.price}</TableCell>
-              </TableRow>
+              <React.Fragment key={exp.id}>
+                <TableRow>
+                  <TableCell
+                    sx={{borderBottom: 'none'}}
+                  >{exp.description}</TableCell>
+                  <TableCell
+                    sx={{borderBottom: 'none'}}
+                  >{exp.date}</TableCell>
+                  <TableCell
+                    sx={{borderBottom: 'none'}}
+                  >{exp.price}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell></TableCell>
+                  <TableCell></TableCell>
+                  <TableCell
+                    sx={{
+                      display: 'flex',
+                      m: 0,
+                      p: 0,
+                    }}>
+                    <IconButton onClick={handleDelete}>
+                      <DeleteIcon />
+                    </IconButton>
+                    <IconButton onClick={handleEdit(exp.id)}>
+                      <ModeEditIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              </React.Fragment>
             ))}
           </TableBody>
         </Table>

@@ -1,4 +1,6 @@
 import {createSlice, configureStore, createSelector} from '@reduxjs/toolkit'
+import {format} from 'date-fns';
+import _ from 'lodash';
 
 const authService = () => {};
 
@@ -15,11 +17,13 @@ const counterSlice = createSlice({
       Object.assign(state.me, {name, email, token});
     },
     initState: (state, action) => {
-      state.expenses = action.payload.expenses;
+      state.expenses = action.payload.expenses
+        .map(ex => ({...ex, date: format(ex.date, 'yyyy-MM-dd')}));
       state.categories = action.payload.categories;
     },
     addExpense: (state, action) => {
-      state.expenses = action.payload;
+      state.expenses = action.payload
+        .map(ex => ({...ex, date: format(ex.date, 'yyyy-MM-dd')}));
     },
     dropMe: state => {
       state.me = {name: '', email: '', token: ''};
@@ -44,16 +48,23 @@ const store = configureStore({
     })
 });
 
-
 export const selectToken = state => state.me.token;
 export const selectExpenses = state => state.expenses;
-export const selectExpense = id => state => state.expenses.find(ex => ex.id === id);
+export const selectExpense = id => createSelector(
+  [selectCategories, selectExpenses],
+  (cat, exp) => {
+    const expense = exp.find(ex => ex.id == id);
+    const category = cat.find(obj => obj.catId === +id)?.category || '';
+    return {...expense, category};
+  }
+);
+
 export const selectCategories = createSelector([state => state.categories], (cat) => {
   const arr = Object.values(cat);
   return arr.reduce((pv, cv) => {
     if (Array.isArray(pv)) pv.push(...cv.categories)
     return pv;
-  }, [])
+  }, []);
 });
 
 export const selectMe = state => state.me;

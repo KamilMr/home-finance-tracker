@@ -16,7 +16,6 @@ export const useFetch = () => {
     }
 
     if (body) opt.body = JSON.stringify(body);
-    if (body) opt.method = 'POST';
 
     return fetch(getURL(path), opt);
   }

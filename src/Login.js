@@ -32,6 +32,7 @@ const Login = () => {
     try {
       res = await cf({
         path: 'users/login',
+        method: 'POST',
         body: {email, password},
         headers: {
           'Content-type': 'application/json'
