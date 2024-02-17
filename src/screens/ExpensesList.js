@@ -49,7 +49,7 @@ const ExpensesList = () => {
     };
 
     getData();
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reload]);
 
   const handleReload = () => setReload(!reload);

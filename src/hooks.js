@@ -31,5 +31,6 @@ export const useFetchIni = () => {
       .then(res => {
         dispatch(initState(res.d))
       }).catch(err => console.log(err));
+// eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 };

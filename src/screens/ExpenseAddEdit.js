@@ -52,7 +52,7 @@ const ExpenseAddEdit = () => {
     setExpense({...expense, [name]: value});
   };
 
-  const handleCategoryChange = (event, value) => {
+  const handleCategoryChange = (_, value) => {
     setExpense({...expense, categoryId: value.catId});
   };
 

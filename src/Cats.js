@@ -10,6 +10,7 @@ export const Cats = () => {
         setCatData(data);
       })
     .catch(error => console.error('Error fetching data: ', error));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Styles for centering the image
