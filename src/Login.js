@@ -45,7 +45,7 @@ const Login = () => {
 
     if (!res.d) return;
     dispatch(initMe(res.d));
-    navigate('/cats');
+    navigate('/home');
   };
 
   return (

@@ -13,6 +13,8 @@ import {useSelector} from 'react-redux';
 import {selectToken} from './store';
 import Login from './Login';
 import ExpensesList from './screens/ExpensesList';
+import Home from './screens/Home';
+import ExpenseAddEdit from './screens/ExpenseAddEdit';
 
 const Protected = ({children}) => {
   const token = useSelector(selectToken);
@@ -44,12 +46,20 @@ const router = createBrowserRouter([
     ),
     children: [
       {
+        path: 'home',
+        element: <Home />
+      },
+      {
         path: 'cats',
         element: <Cats />
       },
       {
         path: 'expense-list',
         element: <ExpensesList />
+      },
+      {
+        path: 'expense-list/:param',
+        element: <ExpenseAddEdit />
       }
     ]
   },

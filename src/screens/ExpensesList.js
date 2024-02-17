@@ -1,10 +1,27 @@
-import {Button, Table, TableContainer, TableHead, TableCell, TableRow, TableBody} from '@mui/material';
+import {Button, Table, TableContainer, TableHead, TableCell, TableRow, TableBody, Fab} from '@mui/material';
 import {Box, Container} from '@mui/system';
+
+import AddIcon from '@mui/icons-material/Add';
 import {format} from 'date-fns';
 import {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFetch} from '../hooks';
 import {addExpense, selectExpenses} from '../store';
+import {useNavigate} from 'react-router-dom';
+
+const AddBtn = () => {
+  const navigate = useNavigate();
+  const handleAdd = () => navigate('/expense-list/add');
+  return (
+    <Fab sx={{
+      position: 'fixed',
+      right: 50,
+      bottom: 100,
+    }} onClick={handleAdd}>
+      <AddIcon />
+    </Fab>
+  );
+};
 
 const ExpensesList = () => {
   const cf = useFetch();
@@ -36,7 +53,9 @@ const ExpensesList = () => {
   const handleReload = () => setReload(!reload);
 
   return (
-    <Container>
+    <Container sx={{
+
+    }}>
       <Box sx={{
         display: 'flex',
         justifyContent: 'space-between',
@@ -57,13 +76,14 @@ const ExpensesList = () => {
             {expenses.map(exp => (
               <TableRow key={exp.id}>
                 <TableCell>{exp.description}</TableCell>
-                <TableCell>{format(exp.date,  'dd/MM/yyyy')}</TableCell>
+                <TableCell>{format(exp.date, 'dd/MM/yyyy')}</TableCell>
                 <TableCell>{exp.price}</TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+      <AddBtn />
     </Container>
   );
 };
