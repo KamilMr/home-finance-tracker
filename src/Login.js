@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {Button, TextField, Container, Typography} from '@mui/material';
+import {Button, TextField, Container, Typography, Box} from '@mui/material';
 
 import {initMe} from './store';
 import {useNavigate} from 'react-router-dom';
@@ -50,9 +50,9 @@ const Login = () => {
   };
 
   return (
-    <Container maxWidth="sm">
-      <Typography variant="h4">Login</Typography>
-      <form noValidate autoComplete="off">
+    <Container maxWidth="sm" sx={{height: '100vh'}}>
+      <Box sx={{height: 500, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+        <Typography variant="h4">Login</Typography>
         <TextField
           label="Email"
           variant="outlined"
@@ -77,7 +77,7 @@ const Login = () => {
         >
           Login
         </Button>
-      </form>
+      </Box>
     </Container>
   );
 };

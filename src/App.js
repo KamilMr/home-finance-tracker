@@ -25,7 +25,7 @@ const Protected = ({children}) => {
 
 const Layout = ({children}) => {
   return (
-    <Container>
+    <Container sx={{mt: 12}}>
       <Box>
         <AccountMenu />
         {children}
