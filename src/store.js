@@ -1,6 +1,5 @@
 import {createSlice, configureStore, createSelector} from '@reduxjs/toolkit'
 import {format} from 'date-fns';
-import _ from 'lodash';
 
 const authService = () => {};
 
@@ -44,7 +43,7 @@ const store = configureStore({
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       thunk: {
-        extraArgument: authService,
+       extraArgument: authService,
       }
     })
 });
@@ -54,7 +53,7 @@ export const selectExpenses = state => state.expenses;
 export const selectExpense = id => createSelector(
   [selectCategories, selectExpenses],
   (cat, exp) => {
-    const expense = exp.find(ex => ex.id == id);
+    const expense = exp.find(ex => ex.id === +id);
     if (!expense) return;
     const category = cat.find(obj => obj.catId === +id)?.category || '';
     return {...expense, category};

@@ -23,7 +23,6 @@ const ExpenseAddEdit = () => {
   const categories = useSelector(selectCategories);
   const navigate = useNavigate();
   const savedExpense = useSelector(selectExpense(param)) || emptyState();
-  console.log(savedExpense);
   const [expense, setExpense] = useState(savedExpense);
 
   const handleSave = async (d) => {
