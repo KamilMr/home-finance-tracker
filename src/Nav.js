@@ -1,5 +1,5 @@
 import {useDispatch, useSelector} from 'react-redux';
-import {Link, useNavigate} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
 import {AppBar, Button, Box, Container} from '@mui/material';
 
