@@ -1,7 +1,8 @@
-import {Button} from '@mui/base';
-import {Container} from '@mui/system';
 import {useDispatch, useSelector} from 'react-redux';
 import {Link, useNavigate} from 'react-router-dom';
+
+import {AppBar, Button, Box, Container} from '@mui/material';
+
 import {useFetch} from './hooks';
 import {selectToken, dropMe} from './store';
 
@@ -26,22 +27,36 @@ const AuthButton = () => {
 
   return (
     <>
-    <Button onClick={handleLogout}>Logout</Button>
+      <Button sx={{my: 2, color: 'white'}} onClick={handleLogout}>Logout</Button>
     </>
   );
 };
 
 const AccountMenu = () => {
+  const navigate = useNavigate();
   return (
-    <nav>
-      <Container sx={{
-        textAlign: 'right',
-      }}>
-        <Link style={{marginRight: 12}} to={'/cats'}>Kotki</Link>
-        <Link style={{marginRight: 12}} to={'/expense-list'}>Wydatki</Link>
-        <AuthButton />
+    <AppBar position="fixed" color="secondary">
+      <Container maxWidth="xl" sx={{textAlign: 'right'}}>
+        <Box>
+          <Button sx={{
+            my: 2, color: 'white'
+          }}
+            onClick={() => navigate('/cats')}
+          >
+            Kotki
+          </Button>
+          <Button sx={{
+            my: 2, color: 'white'
+          }}
+            onClick={() => navigate('/expense-list')}
+          >
+            Wydatki
+          </Button>
+
+          <AuthButton />
+        </Box>
       </Container>
-    </nav>
+    </AppBar>
   );
 };
 

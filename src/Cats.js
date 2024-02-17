@@ -9,8 +9,8 @@ export const Cats = () => {
       .then(data => {
         setCatData(data);
       })
-    .catch(error => console.error('Error fetching data: ', error));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+      .catch(error => console.error('Error fetching data: ', error));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Styles for centering the image
@@ -26,7 +26,10 @@ export const Cats = () => {
       <h1 style={{textAlign: 'center'}}>Kotki</h1>
       {catData && (
         <div style={imageContainerStyle}>
-          <img src={`https://cataas.com/cat/${catData._id}`} alt="Random Cat" style={{maxWidth: '100%', height: 'auto'}} />
+          <img
+            src={`https://cataas.com/cat/${catData._id}`}
+            alt="Random Cat" style={{maxWidth: '100%', height: 'auto'}}
+          />
           <p>Tags: {catData.tags.join(', ')}</p>
         </div>
       )}
