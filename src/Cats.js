@@ -5,11 +5,11 @@ export const Cats = () => {
 
   useEffect(() => {
     fetch('https://cataas.com/cat?json=true')
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         setCatData(data);
       })
-      .catch(error => console.error('Error fetching data: ', error));
+      .catch((error) => console.error('Error fetching data: ', error));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -28,7 +28,8 @@ export const Cats = () => {
         <div style={imageContainerStyle}>
           <img
             src={`https://cataas.com/cat/${catData._id}`}
-            alt="Random Cat" style={{maxWidth: '100%', height: 'auto'}}
+            alt="Random Cat"
+            style={{maxWidth: '100%', height: 'auto'}}
           />
           <p>Tags: {catData.tags.join(', ')}</p>
         </div>
@@ -36,4 +37,3 @@ export const Cats = () => {
     </div>
   );
 };
-

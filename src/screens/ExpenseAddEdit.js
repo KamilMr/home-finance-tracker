@@ -14,7 +14,7 @@ const emptyState = () => ({
   description: '',
   date: format(new Date(), 'yyyy-MM-dd'),
   price: '',
-  categoryId: ''
+  categoryId: '',
 });
 
 const ExpenseAddEdit = () => {
@@ -34,11 +34,11 @@ const ExpenseAddEdit = () => {
         path: `expenses/${!isNaN(param) ? param : ''}`,
         method: !isNaN(param) ? 'PUT' : 'POST',
         headers: {
-          'Content-type': 'application/json'
+          'Content-type': 'application/json',
         },
         body: {description, categoryId, date, price},
-      }).then(res => res.json());
-    }catch (err) {
+      }).then((res) => res.json());
+    } catch (err) {
       console.log(err);
     }
     if (!resp.d) return;
@@ -64,13 +64,15 @@ const ExpenseAddEdit = () => {
   const handleStop = () => navigate('/expense-list');
 
   return (
-    <Container sx={{
-      display: 'flex',
-      flexDirection: 'column',
-      mt: 6,
-      height: 450,
-      justifyContent: 'space-between',
-    }}>
+    <Container
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        mt: 6,
+        height: 450,
+        justifyContent: 'space-between',
+      }}
+    >
       <TextField
         name="description"
         label="Opis"
@@ -97,11 +99,15 @@ const ExpenseAddEdit = () => {
         getOptionLabel={(option) => option.category}
         renderInput={(params) => <TextField {...params} label="Kategorie" />}
         onChange={handleCategoryChange}
-        value={categories.find(cat => cat.catId === expense.categoryId) || null}
+        value={
+          categories.find((cat) => cat.catId === expense.categoryId) || null
+        }
       />
-      <Box sx={{
-        textAlign: 'right'
-        }}>
+      <Box
+        sx={{
+          textAlign: 'right',
+        }}
+      >
         <Button onClick={handleStop}>Stop</Button>
         <Button onClick={handleSubmit}>Zapisz</Button>
       </Box>

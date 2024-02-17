@@ -27,16 +27,15 @@ const Login = () => {
   };
 
   const handleSave = async () => {
-
-    let res
+    let res;
     try {
       res = await cf({
         path: 'users/login',
         method: 'POST',
         body: {email, password},
         headers: {
-          'Content-type': 'application/json'
-        }
+          'Content-type': 'application/json',
+        },
       });
       res = await res.json();
     } catch (err) {
@@ -51,7 +50,15 @@ const Login = () => {
 
   return (
     <Container maxWidth="sm" sx={{height: '100vh'}}>
-      <Box sx={{height: 500, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+      <Box
+        sx={{
+          height: 500,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
         <Typography variant="h4">Login</Typography>
         <TextField
           label="Email"
@@ -70,11 +77,7 @@ const Login = () => {
           value={password}
           onChange={handlePasswordChange}
         />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleSave}
-        >
+        <Button variant="contained" color="primary" onClick={handleSave}>
           Login
         </Button>
       </Box>
@@ -83,4 +86,3 @@ const Login = () => {
 };
 
 export default Login;
-

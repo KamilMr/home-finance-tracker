@@ -1,4 +1,15 @@
-import {Button, Table, TableContainer, TableHead, TableCell, TableRow, TableBody, Fab, IconButton, useMediaQuery} from '@mui/material';
+import {
+  Button,
+  Table,
+  TableContainer,
+  TableHead,
+  TableCell,
+  TableRow,
+  TableBody,
+  Fab,
+  IconButton,
+  useMediaQuery,
+} from '@mui/material';
 import {Box, Container} from '@mui/system';
 
 import AddIcon from '@mui/icons-material/Add';
@@ -12,7 +23,7 @@ import {useNavigate} from 'react-router-dom';
 
 const AddBtn = () => {
   const navigate = useNavigate();
-  const size = useMediaQuery('(max-width:600px)')
+  const size = useMediaQuery('(max-width:600px)');
   const handleAdd = () => navigate('/expense-list/add');
   return !size ? null : (
     <Fab
@@ -57,15 +68,15 @@ const ExpensesList = () => {
   }, [reload]);
 
   const handleReload = () => setReload(!reload);
-  const handleEdit = id => () => navigate(`/expense-list/${id}`);
+  const handleEdit = (id) => () => navigate(`/expense-list/${id}`);
   const handleAdd = () => navigate('/expense-list/add');
-  const handleDelete = id => async () => {
+  const handleDelete = (id) => async () => {
     let resp;
     try {
       resp = await cf({
         path: `expenses/${id}`,
         method: 'DELETE',
-      }).then(res => res.json());
+      }).then((res) => res.json());
     } catch (err) {
       console.log(err);
       return;
@@ -80,11 +91,13 @@ const ExpensesList = () => {
 
   return (
     <Container sx={{p: 0}}>
-      <Box sx={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-      }}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
         <h1>Wydatki</h1>
         <Box>
           <IconButton color="secondary" onClick={handleAdd}>
@@ -103,18 +116,20 @@ const ExpensesList = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {expenses.map(exp => (
+            {expenses.map((exp) => (
               <React.Fragment key={exp.id}>
                 <TableRow>
-                  <TableCell
-                    sx={{borderBottom: 'none', pl: 0}}
-                  >{exp.description}</TableCell>
-                  <TableCell
-                    sx={{borderBottom: 'none', pl: 0}}
-                  >{exp.date}</TableCell>
+                  <TableCell sx={{borderBottom: 'none', pl: 0}}>
+                    {exp.description}
+                  </TableCell>
+                  <TableCell sx={{borderBottom: 'none', pl: 0}}>
+                    {exp.date}
+                  </TableCell>
                   <TableCell
                     sx={{borderBottom: 'none', pl: 0, textAlign: 'center'}}
-                  >{exp.price}</TableCell>
+                  >
+                    {exp.price}
+                  </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell></TableCell>
@@ -125,7 +140,8 @@ const ExpensesList = () => {
                       m: 0,
                       p: 0,
                       justifyContent: 'flex-end',
-                    }}>
+                    }}
+                  >
                     <IconButton onClick={handleDelete(exp.id)}>
                       <DeleteIcon />
                     </IconButton>

@@ -1,14 +1,10 @@
-import {Box, Container} from '@mui/material';
-import React from 'react';
-import {Cats} from './Cats';
 import AccountMenu from './Nav';
-import {Navigate} from "react-router-dom";
+import React from 'react';
+import {Box, Container} from '@mui/material';
+import {Cats} from './Cats';
+import {Navigate} from 'react-router-dom';
 
-import {
-  createBrowserRouter,
-  RouterProvider,
-  Outlet,
-} from 'react-router-dom';
+import {createBrowserRouter, RouterProvider, Outlet} from 'react-router-dom';
 import {useSelector} from 'react-redux';
 import {selectToken} from './store';
 import Login from './Login';
@@ -18,7 +14,7 @@ import ExpenseAddEdit from './screens/ExpenseAddEdit';
 
 const Protected = ({children}) => {
   const token = useSelector(selectToken);
-  if (!token) return <Navigate to="/login" />
+  if (!token) return <Navigate to="/login" />;
 
   return children;
 };
@@ -47,33 +43,30 @@ const router = createBrowserRouter([
     children: [
       {
         path: 'home',
-        element: <Home />
+        element: <Home />,
       },
       {
         path: 'cats',
-        element: <Cats />
+        element: <Cats />,
       },
       {
         path: 'expense-list',
-        element: <ExpensesList />
+        element: <ExpensesList />,
       },
       {
         path: 'expense-list/:param',
-        element: <ExpenseAddEdit />
-      }
-    ]
+        element: <ExpenseAddEdit />,
+      },
+    ],
   },
   {
     path: '/login',
-    element: <Login />
-  }
+    element: <Login />,
+  },
 ]);
 
 const App = () => {
-  return (
-    <RouterProvider router={router} />
-  );
+  return <RouterProvider router={router} />;
 };
 
 export default App;
-

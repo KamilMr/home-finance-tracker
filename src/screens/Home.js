@@ -11,9 +11,11 @@ const Home = () => {
   const {name = ''} = useSelector(selectMe);
 
   return (
-    <Container sx={{
-      mt: 6,
-      }}>
+    <Container
+      sx={{
+        mt: 6,
+      }}
+    >
       <Typography variant="h3">{`Cześć ${name}`}</Typography>
       <Typography variant="h5">Miłego dnia!</Typography>
       <Typography variant="h5">Buenos dias!</Typography>

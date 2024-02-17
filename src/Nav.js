@@ -21,13 +21,13 @@ const AuthButton = () => {
     dispatch(dropMe());
   };
 
-  if (!token) return (
-    <Button onClick={handleNavigate}>Login</Button>
-  );
+  if (!token) return <Button onClick={handleNavigate}>Login</Button>;
 
   return (
     <>
-      <Button sx={{my: 2, color: 'white'}} onClick={handleLogout}>Logout</Button>
+      <Button sx={{my: 2, color: 'white'}} onClick={handleLogout}>
+        Logout
+      </Button>
     </>
   );
 };
@@ -38,16 +38,20 @@ const AccountMenu = () => {
     <AppBar position="fixed" color="secondary">
       <Container maxWidth="xl" sx={{textAlign: 'right'}}>
         <Box>
-          <Button sx={{
-            my: 2, color: 'white'
-          }}
+          <Button
+            sx={{
+              my: 2,
+              color: 'white',
+            }}
             onClick={() => navigate('/cats')}
           >
             Kotki
           </Button>
-          <Button sx={{
-            my: 2, color: 'white'
-          }}
+          <Button
+            sx={{
+              my: 2,
+              color: 'white',
+            }}
             onClick={() => navigate('/expense-list')}
           >
             Wydatki

@@ -13,12 +13,12 @@ export const useFetch = () => {
         Authorization: `Bearer ${token}`,
         ...headers,
       },
-    }
+    };
 
     if (body) opt.body = JSON.stringify(body);
 
     return fetch(getURL(path), opt);
-  }
+  };
 };
 
 export const useFetchIni = () => {
@@ -27,10 +27,11 @@ export const useFetchIni = () => {
 
   useEffect(() => {
     cf({path: 'ini'})
-      .then(res => res.json())
-      .then(res => {
-        dispatch(initState(res.d))
-      }).catch(err => console.log(err));
-// eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+      .then((res) => res.json())
+      .then((res) => {
+        dispatch(initState(res.d));
+      })
+      .catch((err) => console.log(err));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 };
