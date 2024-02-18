@@ -108,7 +108,7 @@ const ExpenseAddEdit = () => {
           textAlign: 'right',
         }}
       >
-        <Button onClick={handleStop}>Stop</Button>
+        <Button color="error" onClick={handleStop}>Przerwij</Button>
         <Button onClick={handleSubmit}>Zapisz</Button>
       </Box>
     </Container>

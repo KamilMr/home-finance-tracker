@@ -1,3 +1,11 @@
+import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {useNavigate} from 'react-router-dom';
+
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import {Box, Container} from '@mui/system';
 import {
   Button,
   Table,
@@ -10,16 +18,10 @@ import {
   IconButton,
   useMediaQuery,
 } from '@mui/material';
-import {Box, Container} from '@mui/system';
+import _ from 'lodash';
 
-import AddIcon from '@mui/icons-material/Add';
-import ModeEditIcon from '@mui/icons-material/ModeEdit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import React, {useEffect, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import {useFetch} from '../hooks';
 import {addExpense, selectExpenses} from '../store';
-import {useNavigate} from 'react-router-dom';
+import {useFetch} from '../hooks';
 
 const AddBtn = () => {
   const navigate = useNavigate();
@@ -116,7 +118,7 @@ const ExpensesList = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {expenses.map((exp) => (
+            {_.sortBy(expenses, ['date']).reverse().map((exp) => (
               <React.Fragment key={exp.id}>
                 <TableRow>
                   <TableCell sx={{borderBottom: 'none', pl: 0}}>
@@ -142,7 +144,7 @@ const ExpensesList = () => {
                       justifyContent: 'flex-end',
                     }}
                   >
-                    <IconButton onClick={handleDelete(exp.id)}>
+                    <IconButton sx={{mr: 3}} onClick={handleDelete(exp.id)}>
                       <DeleteIcon />
                     </IconButton>
                     <IconButton onClick={handleEdit(exp.id)}>
