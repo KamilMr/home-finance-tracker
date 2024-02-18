@@ -79,12 +79,14 @@ const ExpenseAddEdit = () => {
       <TextField
         name="description"
         label="Opis"
+        sx={{mb: 2}}
         value={expense.description}
         onChange={handleChange}
       />
       <TextField
         name="date"
         label="Data"
+        sx={{mb: 2}}
         type="date"
         value={expense.date}
         onChange={handleChange}
@@ -94,6 +96,7 @@ const ExpenseAddEdit = () => {
         name="price"
         label="Cena"
         type="number"
+        sx={{mb: 2}}
         value={expense.price}
         onChange={handleChange}
       />

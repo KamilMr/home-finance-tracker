@@ -1,6 +1,13 @@
 import {useState} from 'react';
 
-import {Card, CardMedia, IconButton, Input, Container} from '@mui/material';
+import {
+  Box,
+  Card,
+  CardMedia,
+  IconButton,
+  Input,
+  Container,
+} from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {useFetch} from '../hooks';
@@ -69,7 +76,7 @@ const ImagesLoader = ({setImageUrl, imageUrl}) => {
         file: true,
       }).then((res) => res.json());
       if (resp.d?.url) {
-        setImages(resp.d.url) ;
+        setImages(resp.d.url);
         setImageUrl(resp.d.url);
       }
     }
@@ -78,53 +85,54 @@ const ImagesLoader = ({setImageUrl, imageUrl}) => {
   return (
     <Container sx={styles.root}>
       {image && (
-        /* eslint-disable-next-line */
-        <div css={styles.image}>
-          <Card css={{width: 100}}>
+        <Box sx={styles.image}>
+          <Card>
             <CardMedia
               component="img"
               image={image}
-              height="100"
-              disabled
+              sx={{
+                width: '100%',
+                height: 300,
+              }}
             />
           </Card>
           <IconButton
             onClick={deleteImage}
-            css={styles.deleteButton}
+            sx={styles.deleteButton}
             size="large">
             <DeleteIcon color="primary" />
           </IconButton>
-        </div>
+        </Box>
       )}
-      <div css={styles.addImage}>
-        <label htmlFor="button-file">
-          <Input
-            type="file"
-            id="button-file"
-            onChange={handleSelectImage}
-            style={{display: 'none'}}
-            inputProps={{accept: 'image/*'}}
-          />
-          {!image && (
+      {!image && (
+        <Box sx={styles.addImage}>
+          <label htmlFor="button-file">
+            <Input
+              type="file"
+              id="button-file"
+              onChange={handleSelectImage}
+              style={{display: 'none'}}
+              inputProps={{accept: 'image/*'}}
+            />
             <IconButton component="span" style={{width: 'auto'}} size="large">
               <AddCircleIcon color="primary" fontSize="large" />
             </IconButton>
-          )}
-        </label>
-      </div>
+          </label>
+        </Box>
+      )}
     </Container>
   );
 };
 
 const styles = {
   root: {
+    mt: 2,
     display: 'flex',
-    flexWrap: 'wrap',
+    justifyContent: 'center',
   },
   image: {
     display: 'flex',
     flexDirection: 'column',
-    marginRight: 10,
     marginBottom: 16,
     alignItems: 'center',
   },
