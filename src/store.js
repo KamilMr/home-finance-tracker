@@ -1,9 +1,14 @@
+import {persistStore, persistReducer} from 'redux-persist';
 import {createSlice, configureStore, createSelector} from '@reduxjs/toolkit';
+import storage from 'localforage';
 import {format} from 'date-fns';
 
-const authService = () => {};
+const persistConfig = {
+  key: 'root',
+  storage,
+};
 
-const counterSlice = createSlice({
+const mainSlice = createSlice({
   name: 'main',
   initialState: {
     me: {name: '', email: '', token: ''},
@@ -30,22 +35,23 @@ const counterSlice = createSlice({
     },
     dropMe: (state) => {
       state.me = {name: '', email: '', token: ''};
+      state.categories = [];
+      state.expenses = [];
     },
     deleteExpense: () => {},
   },
 });
 
-export const {dropMe, initMe, addExpense, initState} = counterSlice.actions;
+const persistedReducer = persistReducer(persistConfig, mainSlice.reducer);
 
 const store = configureStore({
-  reducer: counterSlice.reducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      thunk: {
-        extraArgument: authService,
-      },
-    }),
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({serializableCheck: false}),
 });
+
+let persistor = persistStore(store);
+
+export const {dropMe, initMe, addExpense, initState} = mainSlice.actions;
 
 export const selectToken = (state) => state.me.token;
 export const selectExpenses = (state) => state.expenses;
@@ -70,4 +76,4 @@ export const selectCategories = createSelector(
 
 export const selectMe = (state) => state.me;
 
-export default store;
+export {store, persistor};
