@@ -8,6 +8,7 @@ import _ from 'lodash';
 import {selectCategories, selectExpense} from '../store';
 import {format} from 'date-fns';
 import {useFetch} from '../hooks';
+import ImagesLoader from '../components/ImageLoad';
 
 const emptyState = () => ({
   id: '',
@@ -15,6 +16,7 @@ const emptyState = () => ({
   date: format(new Date(), 'yyyy-MM-dd'),
   price: '',
   categoryId: '',
+  image: '',
 });
 
 const ExpenseAddEdit = () => {
@@ -27,7 +29,7 @@ const ExpenseAddEdit = () => {
 
   const handleSave = async (d) => {
     const newD = _.omitBy(d, (d) => !d || d === 'undefined');
-    const {description, categoryId, date, price} = newD;
+    const {description, categoryId, date, price, image} = newD;
     let resp;
     try {
       resp = await cf({
@@ -36,7 +38,7 @@ const ExpenseAddEdit = () => {
         headers: {
           'Content-type': 'application/json',
         },
-        body: {description, categoryId, date, price},
+        body: {description, categoryId, date, price, image},
       }).then((res) => res.json());
     } catch (err) {
       console.log(err);
@@ -62,6 +64,8 @@ const ExpenseAddEdit = () => {
   };
 
   const handleStop = () => navigate('/expense-list');
+  const handleImageUrl = (url) =>
+    handleChange({target: {name: 'image', value: url}});
 
   return (
     <Container
@@ -71,8 +75,7 @@ const ExpenseAddEdit = () => {
         mt: 6,
         height: 450,
         justifyContent: 'space-between',
-      }}
-    >
+      }}>
       <TextField
         name="description"
         label="Opis"
@@ -103,12 +106,14 @@ const ExpenseAddEdit = () => {
           categories.find((cat) => cat.catId === expense.categoryId) || null
         }
       />
+      <ImagesLoader setImageUrl={handleImageUrl} imageUrl={expense.image} />
       <Box
         sx={{
           textAlign: 'right',
-        }}
-      >
-        <Button color="error" onClick={handleStop}>Przerwij</Button>
+        }}>
+        <Button color="error" onClick={handleStop}>
+          Przerwij
+        </Button>
         <Button onClick={handleSubmit}>Zapisz</Button>
       </Box>
     </Container>

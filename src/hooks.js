@@ -6,7 +6,7 @@ import {useEffect} from 'react';
 export const useFetch = () => {
   const token = useSelector(selectToken);
 
-  return ({path, body, headers, method = 'GET'}) => {
+  return ({path, body, headers, method = 'GET', file = null}) => {
     const opt = {
       method,
       headers: {
@@ -15,7 +15,7 @@ export const useFetch = () => {
       },
     };
 
-    if (body) opt.body = JSON.stringify(body);
+    if (body) opt.body = file ? body : JSON.stringify(body);
 
     return fetch(getURL(path), opt);
   };
