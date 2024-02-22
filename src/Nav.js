@@ -43,6 +43,15 @@ const AccountMenu = () => {
               my: 2,
               color: 'white',
             }}
+            onClick={() => navigate('/income-list')}
+          >
+            Wpływy
+          </Button>
+          <Button
+            sx={{
+              my: 2,
+              color: 'white',
+            }}
             onClick={() => navigate('/cats')}
           >
             Kotki

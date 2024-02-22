@@ -11,6 +11,8 @@ import Login from './Login';
 import ExpensesList from './screens/ExpensesList';
 import Home from './screens/Home';
 import ExpenseAddEdit from './screens/ExpenseAddEdit';
+import IncomeAddEdit from './screens/IncomeAddEdit';
+import IncomeList from './screens/IncomeList';
 
 const Protected = ({children}) => {
   const token = useSelector(selectToken);
@@ -42,7 +44,7 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        path: 'home',
+        path: '/',
         element: <Home />,
       },
       {
@@ -57,6 +59,14 @@ const router = createBrowserRouter([
         path: 'expense-list/:param',
         element: <ExpenseAddEdit />,
       },
+      {
+        path: 'income-list',
+        element: <IncomeList />,
+      },
+      {
+        path: 'income-list/:param',
+        element: <IncomeAddEdit />,
+      },
     ],
   },
   {
@@ -66,7 +76,7 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => {
-  return <RouterProvider router={router} />;
+  return <RouterProvider router={router} defaul />;
 };
 
 export default App;
