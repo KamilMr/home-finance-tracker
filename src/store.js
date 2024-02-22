@@ -8,11 +8,19 @@ const persistConfig = {
   storage,
 };
 
+const emptyState = () => ({
+  me: {name: '', email: '', token: ''},
+  expenses: [],
+  income: [],
+  categories: {},
+});
+
 const mainSlice = createSlice({
   name: 'main',
   initialState: {
     me: {name: '', email: '', token: ''},
     expenses: [],
+    income: [],
     categories: {},
   },
   reducers: {
@@ -26,6 +34,7 @@ const mainSlice = createSlice({
         date: format(ex.date, 'yyyy-MM-dd'),
       }));
       state.categories = action.payload.categories;
+      state.income = action.payload.income;
     },
     addExpense: (state, action) => {
       state.expenses = action.payload.map((ex) => ({
@@ -33,10 +42,14 @@ const mainSlice = createSlice({
         date: format(ex.date, 'yyyy-MM-dd'),
       }));
     },
-    dropMe: (state) => {
-      state.me = {name: '', email: '', token: ''};
-      state.categories = [];
-      state.expenses = [];
+    addIncome: (state, action) => {
+      state.income = action.payload.map((inc) => ({
+        ...inc,
+        date: format(inc.date, 'yyyy-MM-dd'),
+      }));
+    },
+    dropMe: () => {
+      return emptyState();
     },
     deleteExpense: () => {},
   },
@@ -46,21 +59,30 @@ const persistedReducer = persistReducer(persistConfig, mainSlice.reducer);
 
 const store = configureStore({
   reducer: persistedReducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware({serializableCheck: false}),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({serializableCheck: false}),
 });
 
 let persistor = persistStore(store);
 
-export const {dropMe, initMe, addExpense, initState} = mainSlice.actions;
+export const {dropMe, initMe, addExpense, initState, addIncome} = mainSlice.actions;
 
 export const selectToken = (state) => state.me.token;
 export const selectExpenses = (state) => state.expenses;
+export const selectIncomes = (state) => state.income;
 export const selectExpense = (id) =>
   createSelector([selectCategories, selectExpenses], (cat, exp) => {
     const expense = exp.find((ex) => ex.id === +id);
     if (!expense) return;
     const category = cat.find((obj) => obj.catId === +id)?.category || '';
     return {...expense, category};
+  });
+
+export const selectIncome = id =>
+  createSelector([selectIncomes], (inc) => {
+    const income = inc.find((inc) => inc.id === +id);
+    if (!income) return;
+    return income;
   });
 
 export const selectCategories = createSelector(
