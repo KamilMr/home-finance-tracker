@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import {useSelector} from 'react-redux';
 
-import {ButtonGroup, Typography, Button, useTheme} from '@mui/material';
+import {ButtonGroup, Typography, Button} from '@mui/material';
 import {Container} from '@mui/system';
 
 import {selectComparison} from '../store';
@@ -12,7 +12,6 @@ const YEAR = 12;
 
 const Config = ({selection, onChange, title}) => {
   const [active, setActive] = useState(0);
-  const theme = useTheme();
   const handleChange = (e) => {
     const f = e.target.getAttribute('f');
     if (typeof onChange === 'function') {
