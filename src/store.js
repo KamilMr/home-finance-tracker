@@ -2,6 +2,7 @@ import {persistStore, persistReducer} from 'redux-persist';
 import {createSlice, configureStore, createSelector} from '@reduxjs/toolkit';
 import storage from 'localforage';
 import {format} from 'date-fns';
+import {makeNewIdArr} from './common';
 
 const persistConfig = {
   key: 'root',
@@ -93,6 +94,38 @@ export const selectCategories = createSelector(
       if (Array.isArray(pv)) pv.push(...cv.categories);
       return pv;
     }, []);
+  },
+);
+
+export const selectComparison = num => createSelector(
+  [selectIncomes, selectExpenses],
+  (income, expenses) => {
+    const pattern = +num === 1 ? 'MM/yyyy' : 'yyyy';
+    const calPrice = (price, vat = 0) => price - (price * (vat / 100));
+
+    // {
+    //  2023: {income, date, outcome}
+    //  11/2023: {income, date, outcome}
+    // }
+    const tR = {};
+    income.forEach(el => {
+      const {date, price, vat} = el;
+      const fd = format(new Date(date), pattern);
+      if (!tR[fd]) tR[fd] = {income: 0, date: fd, outcome: 0};
+
+      tR[fd].income += calPrice(price, vat)
+    });
+
+    expenses.forEach(({date, price}) => {
+      const fd = format(new Date(date), pattern);
+      if (!tR[fd]) tR[fd] = {income: 0, date: fd, outcome: 0};
+      tR[fd].outcome += price;
+    })
+
+    const arr = Object.values(tR);
+    const ids = makeNewIdArr(arr.length);
+    arr.forEach((ob, idx) => ob.id = ids[idx]);
+    return arr;
   },
 );
 

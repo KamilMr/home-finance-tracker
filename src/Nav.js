@@ -11,7 +11,6 @@ import {
   IconButton,
   List,
   ListItem,
-  ListItemText,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 
@@ -50,7 +49,7 @@ const NavigateButton = ({path, title, cb, ...rest}) => {
   const navigate = useNavigate();
   const isMobile = useMediaQ('sm');
   const handleNavigate = (path) => (e) => {
-    cb(false)(e);
+    if (typeof cb === 'function') cb(false)(e);
     navigate(path);
   };
   return (
