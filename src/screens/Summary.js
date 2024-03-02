@@ -30,13 +30,8 @@ const Config = ({selection, onChange, title}) => {
             key={f}
             f={f}
             onClick={handleChange}
-            sx={{
-              background: idx === active ? theme.palette.primary.main : '',
-              color:
-                idx === active
-                  ? theme.palette.primary.contrastText
-                  : theme.palette.primary.main,
-            }}>
+            variant={idx === active ? 'contained' : 'outlined'}
+          >
             {name}
           </Button>
         ))}
