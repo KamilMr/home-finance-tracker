@@ -7,7 +7,7 @@ export const getURL = (p = '') => {
 };
 
 export const formatPrice = (grosz) => {
-  const zloty = grosz / 100;
+  const zloty = grosz;
   return `${zloty.toFixed(2)} zł`;
 };
 
