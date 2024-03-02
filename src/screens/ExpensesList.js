@@ -11,35 +11,16 @@ import {
   Table,
   TableContainer,
   TableHead,
-  TableCell,
   TableRow,
   TableBody,
-  Fab,
   IconButton,
-  useMediaQuery,
 } from '@mui/material';
 import _ from 'lodash';
 
 import {addExpense, selectExpenses} from '../store';
 import {useFetch} from '../hooks';
-
-const AddBtn = () => {
-  const navigate = useNavigate();
-  const size = useMediaQuery('(max-width:600px)');
-  const handleAdd = () => navigate('/expense-list/add');
-  return !size ? null : (
-    <Fab
-      sx={{
-        position: 'fixed',
-        right: 50,
-        bottom: 100,
-      }}
-      onClick={handleAdd}
-    >
-      <AddIcon />
-    </Fab>
-  );
-};
+import {TableCell} from '../components/material';
+import AddBtn from '../components/AddBtn';
 
 const ExpensesList = () => {
   const cf = useFetch();
@@ -130,7 +111,7 @@ const ExpensesList = () => {
                   <TableCell
                     sx={{borderBottom: 'none', pl: 0, textAlign: 'center'}}
                   >
-                    {exp.price}
+                    {exp.price + ' zł'}
                   </TableCell>
                 </TableRow>
                 <TableRow>
@@ -157,7 +138,7 @@ const ExpensesList = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <AddBtn />
+      <AddBtn path="/expense-list/add" />
     </Container>
   );
 };

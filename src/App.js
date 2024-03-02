@@ -13,6 +13,7 @@ import Home from './screens/Home';
 import ExpenseAddEdit from './screens/ExpenseAddEdit';
 import IncomeAddEdit from './screens/IncomeAddEdit';
 import IncomeList from './screens/IncomeList';
+import Summary from './screens/Summary';
 
 const Protected = ({children}) => {
   const token = useSelector(selectToken);
@@ -66,6 +67,10 @@ const router = createBrowserRouter([
       {
         path: 'income-list/:param',
         element: <IncomeAddEdit />,
+      },
+      {
+        path: 'summary',
+        element: <Summary />,
       },
     ],
   },

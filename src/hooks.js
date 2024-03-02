@@ -2,6 +2,8 @@ import {selectToken, initState} from './store';
 import {useDispatch, useSelector} from 'react-redux';
 import {getURL} from './common';
 import {useEffect} from 'react';
+import {useTheme} from '@mui/material/styles';
+import {useMediaQuery} from '@mui/material';
 
 export const useFetch = () => {
   const token = useSelector(selectToken);
@@ -34,4 +36,10 @@ export const useFetchIni = () => {
       .catch((err) => console.log(err));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+};
+
+export const useMediaQ = size => {
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.down(size));
+  return matches;
 };

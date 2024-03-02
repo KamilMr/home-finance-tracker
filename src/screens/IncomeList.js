@@ -13,33 +13,14 @@ import {
   TableHead,
   TableRow,
   TableBody,
-  Fab,
   IconButton,
-  useMediaQuery,
 } from '@mui/material';
 import _ from 'lodash';
 
 import {addIncome, selectIncomes} from '../store';
 import {useFetch} from '../hooks';
 import {TableCell} from '../components/material';
-
-const AddBtn = () => {
-  const navigate = useNavigate();
-  const size = useMediaQuery('(max-width:600px)');
-  const handleAdd = () => navigate('/expense-list/add');
-  return !size ? null : (
-    <Fab
-      sx={{
-        position: 'fixed',
-        right: 50,
-        bottom: 100,
-      }}
-      onClick={handleAdd}
-    >
-      <AddIcon />
-    </Fab>
-  );
-};
+import AddBtn from '../components/AddBtn';
 
 const IncomeList = () => {
   const cf = useFetch();
@@ -98,8 +79,7 @@ const IncomeList = () => {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-        }}
-      >
+        }}>
         <h1>Wpływy</h1>
         <Box>
           <IconButton color="secondary" onClick={handleAdd}>
@@ -112,62 +92,53 @@ const IncomeList = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Data</TableCell>
-              <TableCell>Kwota</TableCell>
-              <TableCell>Źródło</TableCell>
-              <TableCell>Kto</TableCell>
-              <TableCell>Vat</TableCell>
+              <TableCell sx={{borderBottom: '.1rem solid'}}>Data</TableCell>
+              <TableCell sx={{borderBottom: '.1rem solid'}}>Kwota</TableCell>
+              <TableCell sx={{borderBottom: '.1rem solid'}}>Źródło</TableCell>
+              <TableCell sx={{borderBottom: '.1rem solid'}}>Kto</TableCell>
+              <TableCell sx={{borderBottom: '.1rem solid'}}>Vat</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {_.sortBy(icomes, ['date']).reverse().map((income) => (
-              <React.Fragment key={income.id}>
-                <TableRow>
-                  <TableCell sx={{borderBottom: 'none', p: 0}}>
-                    {income.date}
-                  </TableCell>
-                  <TableCell sx={{borderBottom: 'none', p: 0}}>
-                    {income.price}
-                  </TableCell>
-                  <TableCell
-                    sx={{borderBottom: 'none', p: 0}}
-                  >
-                    {income.source}
-                  </TableCell>
-                  <TableCell sx={{borderBottom: 'none', p: 0}}>
-                    {income.owner}
-                  </TableCell>
-                  <TableCell sx={{borderBottom: 'none', p: 0}}>
-                    {income.vat}
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                  <TableCell
-                    sx={{
-                      display: 'flex',
-                      m: 0,
-                      p: 0,
-                      justifyContent: 'flex-end',
-                    }}
-                  >
-                    <IconButton sx={{mr: 3}} onClick={handleDelete(income.id)}>
-                      <DeleteIcon />
-                    </IconButton>
-                    <IconButton onClick={handleEdit(income.id)}>
-                      <ModeEditIcon />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              </React.Fragment>
-            ))}
+            {_.sortBy(icomes, ['date'])
+              .reverse()
+              .map((income) => (
+                <React.Fragment key={income.id}>
+                  <TableRow>
+                    <TableCell>{income.date}</TableCell>
+                    <TableCell>{income.price + ' zł'}</TableCell>
+                    <TableCell>{income.source}</TableCell>
+                    <TableCell>{income.owner}</TableCell>
+                    <TableCell>{income.vat + '%'}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell
+                      sx={{
+                        display: 'flex',
+                        m: 0,
+                        p: 0,
+                        justifyContent: 'flex-end',
+                      }}>
+                      <IconButton
+                        sx={{mr: 3}}
+                        onClick={handleDelete(income.id)}>
+                        <DeleteIcon />
+                      </IconButton>
+                      <IconButton onClick={handleEdit(income.id)}>
+                        <ModeEditIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                </React.Fragment>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
-      <AddBtn />
+      <AddBtn path="/income-list/add" />
     </Container>
   );
 };

@@ -1,9 +1,21 @@
+import {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 
-import {AppBar, Button, Box, Container} from '@mui/material';
+import {
+  AppBar,
+  Button,
+  Box,
+  Container,
+  Drawer,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
+} from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
 
-import {useFetch} from './hooks';
+import {useFetch, useMediaQ} from './hooks';
 import {selectToken, dropMe} from './store';
 
 const AuthButton = () => {
@@ -25,49 +37,94 @@ const AuthButton = () => {
 
   return (
     <>
-      <Button sx={{my: 2, color: 'white'}} onClick={handleLogout}>
-        Logout
-      </Button>
+      <NavigateButton
+        sx={{ml: 2}}
+        onClick={handleLogout}
+        title="Logout"
+      />
     </>
   );
 };
 
-const AccountMenu = () => {
+const NavigateButton = ({path, title, cb, ...rest}) => {
   const navigate = useNavigate();
+  const isMobile = useMediaQ('sm');
+  const handleNavigate = (path) => (e) => {
+    cb(false)(e);
+    navigate(path);
+  };
+  return (
+    <Button
+      sx={{my: 1, color: isMobile ? '' : 'white'}}
+      onClick={handleNavigate(path)}
+      size="small"
+      {...rest}>
+      {title}
+    </Button>
+  );
+};
+
+const AccountMenu = () => {
+  const isMobile = useMediaQ('sm');
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const toggleDrawer = (open) => (event) => {
+    if (
+      event.type === 'keydown' &&
+      (event.key === 'Tab' || event.key === 'Shift')
+    ) {
+      return;
+    }
+    setDrawerOpen(open);
+  };
+
+  const menuItems = [
+    {path: '/summary', title: 'Podsumowanie'},
+    {path: '/income-list', title: 'Wpływy'},
+    {path: '/cats', title: 'Kotki'},
+    {path: '/expense-list', title: 'Wydatki'},
+    // Add more items here
+  ];
+
   return (
     <AppBar position="fixed" color="secondary">
       <Container maxWidth="xl" sx={{textAlign: 'right'}}>
-        <Box>
-          <Button
-            sx={{
-              my: 2,
-              color: 'white',
-            }}
-            onClick={() => navigate('/income-list')}
-          >
-            Wpływy
-          </Button>
-          <Button
-            sx={{
-              my: 2,
-              color: 'white',
-            }}
-            onClick={() => navigate('/cats')}
-          >
-            Kotki
-          </Button>
-          <Button
-            sx={{
-              my: 2,
-              color: 'white',
-            }}
-            onClick={() => navigate('/expense-list')}
-          >
-            Wydatki
-          </Button>
-
-          <AuthButton />
-        </Box>
+        {isMobile ? (
+          <>
+            <IconButton
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              onClick={toggleDrawer(true)}>
+              <MenuIcon />
+            </IconButton>
+            <Drawer
+              anchor="right"
+              open={drawerOpen}
+              onClose={toggleDrawer(false)}>
+              <List>
+                {menuItems.map((item, index) => (
+                  <ListItem key={index}>
+                    <NavigateButton
+                      key={index}
+                      path={item.path}
+                      title={item.title}
+                      cb={toggleDrawer}
+                    />
+                  </ListItem>
+                ))}
+                <AuthButton />
+              </List>
+            </Drawer>
+          </>
+        ) : (
+          <Box>
+            {menuItems.map((item, index) => (
+              <NavigateButton key={index} path={item.path} title={item.title} />
+            ))}
+            <AuthButton />
+          </Box>
+        )}
       </Container>
     </AppBar>
   );
