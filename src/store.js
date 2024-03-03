@@ -160,7 +160,7 @@ export const selectCategories = createSelector(
 );
 
 export const selectComparison = (num) =>
-  createSelector([selectIncomes, selectExpenses], (income, expenses) => {
+  createSelector([selectIncomes, selectExpensesAll], (income, expenses) => {
     const pattern = +num === 1 ? 'MM/yyyy' : 'yyyy';
     const calPrice = (price, vat = 0) => price - price * (vat / 100);
 
