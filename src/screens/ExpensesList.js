@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 
@@ -28,27 +28,6 @@ const ExpensesList = () => {
   const dispatch = useDispatch();
   const expenses = useSelector(selectExpenses);
   const [reload, setReload] = useState(false);
-
-  useEffect(() => {
-    const getData = async () => {
-      let data;
-      try {
-        const resp = await cf({path: 'expenses'});
-        if (!resp.ok) {
-          console.log('err');
-        }
-        data = await resp.json();
-      } catch (err) {
-        console.log(err);
-        return;
-      }
-
-      dispatch(addExpense(data.d));
-    };
-
-    getData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [reload]);
 
   const handleReload = () => setReload(!reload);
   const handleEdit = (id) => () => navigate(`/expense-list/${id}`);

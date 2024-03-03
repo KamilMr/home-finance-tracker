@@ -1,11 +1,11 @@
 import {useState} from 'react';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate, useParams} from 'react-router-dom';
 
 import {Autocomplete, Box, Button, Container, TextField} from '@mui/material';
 import _ from 'lodash';
 
-import {selectCategories, selectExpense} from '../store';
+import {addExpense, selectCategories, selectExpense} from '../store';
 import {format} from 'date-fns';
 import {useFetch} from '../hooks';
 import ImagesLoader from '../components/ImageLoad';
@@ -20,6 +20,7 @@ const emptyState = () => ({
 });
 
 const ExpenseAddEdit = () => {
+  const disptach = useDispatch();
   const {param} = useParams();
   const cf = useFetch();
   const categories = useSelector(selectCategories);
@@ -45,6 +46,7 @@ const ExpenseAddEdit = () => {
     }
     if (!resp.d) return;
 
+    disptach(addExpense([resp.d]));
     navigate('/expense-list');
   };
 

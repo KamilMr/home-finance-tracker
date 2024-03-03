@@ -13,9 +13,10 @@ import {
   ListItem,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import CachedIcon from '@mui/icons-material/Cached';
 
 import {useFetch, useMediaQ} from './hooks';
-import {selectToken, dropMe} from './store';
+import {selectToken, dropMe, fetchIni} from './store';
 
 const AuthButton = () => {
   const token = useSelector(selectToken);
@@ -36,12 +37,20 @@ const AuthButton = () => {
 
   return (
     <>
-      <NavigateButton
-        sx={{ml: 2}}
-        onClick={handleLogout}
-        title="Logout"
-      />
+      <NavigateButton sx={{ml: 2}} onClick={handleLogout} title="Logout" />
     </>
+  );
+};
+
+const ReloadButton = () => {
+  const dispatch = useDispatch();
+  const handleFetchIni = () => {
+    dispatch(fetchIni());
+  };
+  return (
+    <IconButton sx={{mr: 2, color: 'white'}} onClick={handleFetchIni}>
+      <CachedIcon />
+    </IconButton>
   );
 };
 
@@ -90,6 +99,7 @@ const AccountMenu = () => {
       <Container maxWidth="xl" sx={{textAlign: 'right'}}>
         {isMobile ? (
           <>
+            <ReloadButton />
             <IconButton
               edge="start"
               color="inherit"
@@ -113,11 +123,13 @@ const AccountMenu = () => {
                   </ListItem>
                 ))}
                 <AuthButton />
+                <ReloadButton />
               </List>
             </Drawer>
           </>
         ) : (
           <Box>
+            <ReloadButton />
             {menuItems.map((item, index) => (
               <NavigateButton key={index} path={item.path} title={item.title} />
             ))}
