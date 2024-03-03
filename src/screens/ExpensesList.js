@@ -28,7 +28,7 @@ const ExpensesList = () => {
   const [number, setNumber] = useState(20);
   const expenses = useSelector(selectExpenses(number));
 
-  const handleReload = () => setNumber(number + 20);
+  const handleReload = () => setNumber(number + 60);
   const handleEdit = (id) => () => navigate(`/expense-list/${id}`);
   const handleAdd = () => navigate('/expense-list/add');
   const handleDelete = (id) => async () => {
