@@ -5,7 +5,12 @@ import {useNavigate, useParams} from 'react-router-dom';
 import {Autocomplete, Box, Button, Container, TextField} from '@mui/material';
 import _ from 'lodash';
 
-import {addExpense, selectCategories, selectExpense, updateExpense} from '../store';
+import {
+  addExpense,
+  selectCategories,
+  selectExpense,
+  updateExpense,
+} from '../store';
 import {format} from 'date-fns';
 import {useFetch} from '../hooks';
 import ImagesLoader from '../components/ImageLoad';

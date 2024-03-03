@@ -92,7 +92,7 @@ const ImagesLoader = ({setImageUrl, imageUrl}) => {
               image={image}
               sx={{
                 width: '100%',
-                height: 300,
+                height: 200,
               }}
             />
           </Card>
@@ -133,8 +133,8 @@ const styles = {
   image: {
     display: 'flex',
     flexDirection: 'column',
-    marginBottom: 16,
     alignItems: 'center',
+    mt: 1,
   },
   deleteButton: {
     marginTop: 2,
