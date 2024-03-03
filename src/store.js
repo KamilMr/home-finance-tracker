@@ -186,7 +186,7 @@ export const selectComparison = (num) =>
     const arr = Object.values(tR);
     const ids = makeNewIdArr(arr.length);
     arr.forEach((ob, idx) => (ob.id = ids[idx]));
-    return arr;
+    return _.sortBy(arr, ['date']);
   });
 
 export const selectMe = (state) => state.me;
