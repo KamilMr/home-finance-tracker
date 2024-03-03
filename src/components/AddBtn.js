@@ -11,7 +11,7 @@ const AddBtn = ({path}) => {
     <Fab
       sx={{
         position: 'fixed',
-        right: 50,
+        right: 20,
         bottom: 100,
       }}
       onClick={handleAdd}>

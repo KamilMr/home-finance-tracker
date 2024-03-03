@@ -9,13 +9,14 @@ import {Box} from '@mui/system';
 import {EXPENSE_LIST_PATH, INCOME_LIST_PATH, SUMMARY_PATH} from '../common';
 import {useMediaQ} from '../hooks';
 
+const target = [EXPENSE_LIST_PATH, INCOME_LIST_PATH, SUMMARY_PATH];
+
 const BottomNav = () => {
   const isMobile = useMediaQ('sm');
   const navigate = useNavigate();
   const [value, setValue] = useState(0);
 
   const handleNavigate = (e, newVal) => {
-    const target = [EXPENSE_LIST_PATH, INCOME_LIST_PATH, SUMMARY_PATH];
     setValue(newVal);
     navigate(target[newVal]);
   };

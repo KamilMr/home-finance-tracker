@@ -21,16 +21,21 @@ const Config = ({selection, onChange, title}) => {
   };
 
   return (
-    <Container sx={{display: 'flex', justifyContent: 'space-between', mb: 2}}>
-      <Typography>{title}</Typography>
+    <Container
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-end',
+        mb: 2,
+      }}>
+      <Typography variant="h4">{title}</Typography>
       <ButtonGroup>
         {selection.map(([f, name], idx) => (
           <Button
             key={f}
             f={f}
             onClick={handleChange}
-            variant={idx === active ? 'contained' : 'outlined'}
-          >
+            variant={idx === active ? 'contained' : 'outlined'}>
             {name}
           </Button>
         ))}

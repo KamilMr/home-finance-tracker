@@ -14,6 +14,7 @@ import {
   TableRow,
   TableBody,
   IconButton,
+  Typography,
 } from '@mui/material';
 import _ from 'lodash';
 
@@ -80,7 +81,7 @@ const IncomeList = () => {
           justifyContent: 'space-between',
           alignItems: 'center',
         }}>
-        <h1>Wpływy</h1>
+        <Typography variant="h4">Wpływy</Typography>
         <Box>
           <IconButton color="secondary" onClick={handleAdd}>
             <AddIcon />

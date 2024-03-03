@@ -14,6 +14,8 @@ import {
   TableRow,
   TableBody,
   IconButton,
+  Badge,
+  Typography,
 } from '@mui/material';
 
 import {removeExpense, selectExpenses} from '../store';
@@ -57,10 +59,10 @@ const ExpensesList = () => {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-        }}
-      >
-        <h1>Wydatki</h1>
-        <h5>{expenses.length}</h5>
+        }}>
+        <Badge badgeContent={expenses.length} color="primary">
+          <Typography variant="h4">Wydatki</Typography>
+        </Badge>
         <Box>
           <IconButton color="secondary" onClick={handleAdd}>
             <AddIcon />
@@ -88,8 +90,7 @@ const ExpensesList = () => {
                     {exp.date}
                   </TableCell>
                   <TableCell
-                    sx={{borderBottom: 'none', pl: 0, textAlign: 'center'}}
-                  >
+                    sx={{borderBottom: 'none', pl: 0, textAlign: 'center'}}>
                     {exp.price + ' zł'}
                   </TableCell>
                 </TableRow>
@@ -102,8 +103,7 @@ const ExpensesList = () => {
                       m: 0,
                       p: 0,
                       justifyContent: 'flex-end',
-                    }}
-                  >
+                    }}>
                     <IconButton sx={{mr: 3}} onClick={handleDelete(exp.id)}>
                       <DeleteIcon />
                     </IconButton>
