@@ -3,18 +3,18 @@ import {Box, Container} from '@mui/material';
 import {Cats} from './Cats';
 import {Navigate} from 'react-router-dom';
 
-import {createBrowserRouter, RouterProvider, Outlet} from 'react-router-dom';
-import {useSelector} from 'react-redux';
-import {selectToken} from './store';
 import AccountMenu from './Nav';
-import Login from './Login';
+import BottomNav from './components/BottomNav';
+import ExpenseAddEdit from './screens/ExpenseAddEdit';
 import ExpensesList from './screens/ExpensesList';
 import Home from './screens/Home';
-import ExpenseAddEdit from './screens/ExpenseAddEdit';
 import IncomeAddEdit from './screens/IncomeAddEdit';
 import IncomeList from './screens/IncomeList';
+import Login from './Login';
 import Summary from './screens/Summary';
-import BottomNav from './components/BottomNav';
+import {createBrowserRouter, RouterProvider, Outlet} from 'react-router-dom';
+import {selectToken} from './store';
+import {useSelector} from 'react-redux';
 import {
   CATS_PATH,
   EXPENSE_ADD_EDIT_PATH,

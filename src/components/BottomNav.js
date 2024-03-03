@@ -1,3 +1,4 @@
+import {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 
 import BalanceIcon from '@mui/icons-material/Balance';
@@ -11,9 +12,11 @@ import {useMediaQ} from '../hooks';
 const BottomNav = () => {
   const isMobile = useMediaQ('sm');
   const navigate = useNavigate();
+  const [value, setValue] = useState(0);
 
   const handleNavigate = (e, newVal) => {
     const target = [EXPENSE_LIST_PATH, INCOME_LIST_PATH, SUMMARY_PATH];
+    setValue(newVal);
     navigate(target[newVal]);
   };
 
@@ -23,7 +26,7 @@ const BottomNav = () => {
       <Paper
         sx={{position: 'fixed', bottom: 0, left: 0, right: 0}}
         elevation={3}>
-        <BottomNavigation onChange={handleNavigate}>
+        <BottomNavigation onChange={handleNavigate} value={value}>
           <BottomNavigationAction
             label="Wydatki"
             icon={<ShoppingCartCheckoutIcon />}
