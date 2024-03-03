@@ -15,9 +15,8 @@ import {
   TableBody,
   IconButton,
 } from '@mui/material';
-import _ from 'lodash';
 
-import {addExpense, selectExpenses} from '../store';
+import {removeExpense, selectExpenses} from '../store';
 import {useFetch} from '../hooks';
 import {TableCell} from '../components/material';
 import AddBtn from '../components/AddBtn';
@@ -48,7 +47,7 @@ const ExpensesList = () => {
       return;
     }
 
-    dispatch(addExpense(resp.d));
+    dispatch(removeExpense(id));
   };
 
   return (
@@ -73,9 +72,9 @@ const ExpensesList = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Opis</TableCell>
-              <TableCell>Data</TableCell>
-              <TableCell>Cena</TableCell>
+              <TableCell sx={{borderBottom: '.1rem solid'}}>Opis</TableCell>
+              <TableCell sx={{borderBottom: '.1rem solid'}}>Data</TableCell>
+              <TableCell sx={{borderBottom: '.1rem solid'}}>Cena</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
