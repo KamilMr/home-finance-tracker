@@ -8,6 +8,7 @@ import {
 import storage from 'localforage';
 import {format} from 'date-fns';
 import {getURL, makeNewIdArr} from './common';
+import _ from 'lodash';
 
 export const fetchIni = createAsyncThunk('fetchIni', async (_, thunkAPI) => {
   const {token} = thunkAPI.getState().me;
@@ -107,7 +108,13 @@ export const {dropMe, initMe, addExpense, initState, addIncome} =
   mainSlice.actions;
 
 export const selectToken = (state) => state.me.token;
-export const selectExpenses = (state) => state.expenses;
+export const selectExpenses = (number) => createSelector(
+  state => state.expenses,
+  (expenses) => {
+    return _.sortBy(expenses, ['date']).reverse().slice(0, number);
+  }
+);
+
 export const selectIncomes = (state) => state.income;
 export const selectExpense = (id) =>
   createSelector([selectCategories, selectExpenses], (cat, exp) => {

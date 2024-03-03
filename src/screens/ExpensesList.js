@@ -26,10 +26,10 @@ const ExpensesList = () => {
   const cf = useFetch();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const expenses = useSelector(selectExpenses);
-  const [reload, setReload] = useState(false);
+  const [number, setNumber] = useState(20);
+  const expenses = useSelector(selectExpenses(number));
 
-  const handleReload = () => setReload(!reload);
+  const handleReload = () => setNumber(number + 20);
   const handleEdit = (id) => () => navigate(`/expense-list/${id}`);
   const handleAdd = () => navigate('/expense-list/add');
   const handleDelete = (id) => async () => {
@@ -61,11 +61,12 @@ const ExpensesList = () => {
         }}
       >
         <h1>Wydatki</h1>
+        <h5>{expenses.length}</h5>
         <Box>
           <IconButton color="secondary" onClick={handleAdd}>
             <AddIcon />
           </IconButton>
-          <Button onClick={handleReload}>Odśwież</Button>
+          <Button onClick={handleReload}>Pokaż więcej</Button>
         </Box>
       </Box>
       <TableContainer>
@@ -78,7 +79,7 @@ const ExpensesList = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {_.sortBy(expenses, ['date']).reverse().map((exp) => (
+            {expenses.map((exp) => (
               <React.Fragment key={exp.id}>
                 <TableRow>
                   <TableCell sx={{borderBottom: 'none', pl: 0}}>
