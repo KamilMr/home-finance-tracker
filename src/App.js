@@ -1,4 +1,3 @@
-import AccountMenu from './Nav';
 import React from 'react';
 import {Box, Container} from '@mui/material';
 import {Cats} from './Cats';
@@ -7,6 +6,7 @@ import {Navigate} from 'react-router-dom';
 import {createBrowserRouter, RouterProvider, Outlet} from 'react-router-dom';
 import {useSelector} from 'react-redux';
 import {selectToken} from './store';
+import AccountMenu from './Nav';
 import Login from './Login';
 import ExpensesList from './screens/ExpensesList';
 import Home from './screens/Home';
@@ -14,6 +14,16 @@ import ExpenseAddEdit from './screens/ExpenseAddEdit';
 import IncomeAddEdit from './screens/IncomeAddEdit';
 import IncomeList from './screens/IncomeList';
 import Summary from './screens/Summary';
+import BottomNav from './components/BottomNav';
+import {
+  CATS_PATH,
+  EXPENSE_ADD_EDIT_PATH,
+  EXPENSE_LIST_PATH,
+  HOME_PATH,
+  INCOME_ADD_EDIT_PATH,
+  INCOME_LIST_PATH,
+  SUMMARY_PATH,
+} from './common';
 
 const Protected = ({children}) => {
   const token = useSelector(selectToken);
@@ -28,6 +38,7 @@ const Layout = ({children}) => {
       <Box>
         <AccountMenu />
         {children}
+        <BottomNav />
       </Box>
     </Container>
   );
@@ -35,7 +46,7 @@ const Layout = ({children}) => {
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: HOME_PATH,
     element: (
       <Protected>
         <Layout>
@@ -45,31 +56,31 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        path: '/',
+        path: HOME_PATH,
         element: <Home />,
       },
       {
-        path: 'cats',
+        path: CATS_PATH,
         element: <Cats />,
       },
       {
-        path: 'expense-list',
+        path: EXPENSE_LIST_PATH,
         element: <ExpensesList />,
       },
       {
-        path: 'expense-list/:param',
+        path: EXPENSE_ADD_EDIT_PATH,
         element: <ExpenseAddEdit />,
       },
       {
-        path: 'income-list',
+        path: INCOME_LIST_PATH,
         element: <IncomeList />,
       },
       {
-        path: 'income-list/:param',
+        path: INCOME_ADD_EDIT_PATH,
         element: <IncomeAddEdit />,
       },
       {
-        path: 'summary',
+        path: SUMMARY_PATH,
         element: <Summary />,
       },
     ],
