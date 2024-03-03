@@ -134,6 +134,8 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    height: 200,
+    width: 200,
     mt: 1,
   },
   deleteButton: {
