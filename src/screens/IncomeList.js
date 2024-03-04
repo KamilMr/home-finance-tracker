@@ -17,6 +17,7 @@ import {
   Typography,
 } from '@mui/material';
 import _ from 'lodash';
+import {format} from 'date-fns';
 
 import {addIncome, selectIncomes} from '../store';
 import {useFetch} from '../hooks';
@@ -74,7 +75,7 @@ const IncomeList = () => {
   };
 
   return (
-    <Container sx={{p: 0}}>
+    <Container>
       <Box
         sx={{
           display: 'flex',
@@ -106,7 +107,7 @@ const IncomeList = () => {
               .map((income) => (
                 <React.Fragment key={income.id}>
                   <TableRow>
-                    <TableCell>{income.date}</TableCell>
+                    <TableCell>{format(new Date(income.date), 'dd/MM/yyyy')}</TableCell>
                     <TableCell>{income.price + ' zł'}</TableCell>
                     <TableCell>{income.source}</TableCell>
                     <TableCell>{income.owner}</TableCell>

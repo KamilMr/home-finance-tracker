@@ -50,7 +50,7 @@ const Summary = () => {
   const handleChange = (f) => setFilter(f);
 
   return (
-    <Container>
+    <Container sx={{mb: 8}}>
       <Config
         selection={[
           [MONTH, 'miesiac'],

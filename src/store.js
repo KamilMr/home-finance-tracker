@@ -92,7 +92,9 @@ const mainSlice = createSlice({
       return emptyState();
     },
     removeExpense: (state, action) => {
-      state.expenses = state.expenses.filter(exp => exp.id !== action.payload);
+      state.expenses = state.expenses.filter(
+        (exp) => exp.id !== action.payload,
+      );
     },
   },
   extraReducers: (builder) => {
@@ -120,17 +122,26 @@ const store = configureStore({
 
 let persistor = persistStore(store);
 
-export const {dropMe, initMe, addExpense, initState, addIncome, removeExpense, updateExpense} =
-  mainSlice.actions;
+export const {
+  dropMe,
+  initMe,
+  addExpense,
+  initState,
+  addIncome,
+  removeExpense,
+  updateExpense,
+} = mainSlice.actions;
 
 export const selectToken = (state) => state.me.token;
-const selectExpensesAll = state => state.expenses;
-export const selectExpenses = (number) => createSelector(
-  selectExpensesAll,
-  (expenses) => {
-    return _.sortBy(expenses, ['date']).reverse().slice(0, number);
-  }
-);
+const selectExpensesAll = (state) => state.expenses;
+export const selectExpenses = (number) =>
+  createSelector(selectExpensesAll, (expenses) => {
+    expenses = _.sortBy(expenses, ['date']).map((exp) => ({
+      ...exp,
+      date: format(new Date(exp.date), 'dd/MM/yyyy'),
+    }));
+    return expenses.reverse().slice(0, number);
+  });
 
 export const selectIncomes = (state) => state.income;
 export const selectExpense = (id) =>
