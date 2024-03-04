@@ -16,6 +16,10 @@ import {
   IconButton,
   Badge,
   Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from '@mui/material';
 
 import {removeExpense, selectExpenses} from '../store';
@@ -28,12 +32,30 @@ const ExpensesList = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [number, setNumber] = useState(20);
+  const [open, setOpen] = useState(false);
   const expenses = useSelector(selectExpenses(number));
 
   const handleReload = () => setNumber(number + 60);
   const handleEdit = (id) => () => navigate(`/expense-list/${id}`);
   const handleAdd = () => navigate('/expense-list/add');
-  const handleDelete = (id) => async () => {
+  const handleOpenDialog = (id) => () => {
+    setOpen(id);
+  };
+
+  const handleConfirmDialog = async () => {
+    try {
+      await handleDelete(open);
+    } catch (err) {
+      console.log(err);
+    }
+
+    setOpen(false);
+  };
+
+  const handleCloseDialog = async () => {
+    setOpen(false);
+  };
+  const handleDelete = async (id) => {
     let resp;
     try {
       resp = await cf({
@@ -104,7 +126,7 @@ const ExpensesList = () => {
                       p: 0,
                       justifyContent: 'flex-end',
                     }}>
-                    <IconButton sx={{mr: 3}} onClick={handleDelete(exp.id)}>
+                    <IconButton sx={{mr: 3}} onClick={handleOpenDialog(exp.id)}>
                       <DeleteIcon />
                     </IconButton>
                     <IconButton onClick={handleEdit(exp.id)}>
@@ -118,7 +140,29 @@ const ExpensesList = () => {
         </Table>
       </TableContainer>
       <AddBtn path="/expense-list/add" />
+      <DialogBox
+        handleClose={handleCloseDialog}
+        open={open}
+        title="Usunąć ten wydatek?"
+        txt="Zamierzasz usunąć wydatek, co chcesz zrobić?"
+        handleConfirm={handleConfirmDialog}
+      />
     </Container>
+  );
+};
+
+const DialogBox = ({handleClose, open, title, txt, handleConfirm}) => {
+  return (
+    <Dialog onClose={handleClose} open={Boolean(open)}>
+      <DialogTitle>{title}</DialogTitle>
+      <DialogContent>{txt}</DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose}>Nie</Button>
+        <Button onClick={handleConfirm} autoFocus>
+          Tak
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 
