@@ -8,11 +8,6 @@ import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import {Box, Container} from '@mui/system';
 import {
   Button,
-  Table,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TableBody,
   IconButton,
   Badge,
   Typography,
@@ -20,11 +15,14 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Card,
+  CardActions,
+  CardContent,
+  CardHeader,
 } from '@mui/material';
 
 import {removeExpense, selectExpenses} from '../store';
 import {useFetch} from '../hooks';
-import {TableCell} from '../components/material';
 import AddBtn from '../components/AddBtn';
 
 const ExpensesList = () => {
@@ -75,7 +73,7 @@ const ExpensesList = () => {
   };
 
   return (
-    <Container sx={{p: 0}}>
+    <Container sx={{p: 0, m: 0, textAlign: 'center'}}>
       <Box
         sx={{
           display: 'flex',
@@ -89,56 +87,35 @@ const ExpensesList = () => {
           <IconButton color="secondary" onClick={handleAdd}>
             <AddIcon />
           </IconButton>
-          <Button onClick={handleReload}>Pokaż więcej</Button>
         </Box>
       </Box>
-      <TableContainer>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell sx={{borderBottom: '.1rem solid'}}>Opis</TableCell>
-              <TableCell sx={{borderBottom: '.1rem solid'}}>Data</TableCell>
-              <TableCell sx={{borderBottom: '.1rem solid'}}>Cena</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {expenses.map((exp) => (
-              <React.Fragment key={exp.id}>
-                <TableRow>
-                  <TableCell sx={{borderBottom: 'none', pl: 0}}>
-                    {exp.description}
-                  </TableCell>
-                  <TableCell sx={{borderBottom: 'none', pl: 0}}>
-                    {exp.date}
-                  </TableCell>
-                  <TableCell
-                    sx={{borderBottom: 'none', pl: 0, textAlign: 'center'}}>
-                    {exp.price + ' zł'}
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                  <TableCell
-                    sx={{
-                      display: 'flex',
-                      m: 0,
-                      p: 0,
-                      justifyContent: 'flex-end',
-                    }}>
-                    <IconButton sx={{mr: 3}} onClick={handleOpenDialog(exp.id)}>
-                      <DeleteIcon />
-                    </IconButton>
-                    <IconButton onClick={handleEdit(exp.id)}>
-                      <ModeEditIcon />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              </React.Fragment>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Container>
+        {expenses.map((exp) => (
+          <Card key={exp.id} sx={{m: 0, mb: 1, p: 0, textAlign: 'left'}}>
+            <CardHeader subheader={exp.description} />
+            <CardContent sx={{display: 'flex', flexDirection: 'column'}}>
+              <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+                <Box>
+                  <Typography>{exp.date}</Typography>
+                  <Typography>{exp.price + ' zł'}</Typography>
+                </Box>
+                <Box>
+                  <Typography>{exp.category}</Typography>
+                </Box>
+              </Box>
+            </CardContent>
+            <CardActions sx={{display: 'flex', justifyContent: 'flex-end'}}>
+              <IconButton sx={{mr: 3}} onClick={handleOpenDialog(exp.id)}>
+                <DeleteIcon />
+              </IconButton>
+              <IconButton onClick={handleEdit(exp.id)}>
+                <ModeEditIcon />
+              </IconButton>
+            </CardActions>
+          </Card>
+        ))}
+      </Container>
+      <Button onClick={handleReload}>Pokaż więcej</Button>
       <AddBtn path="/expense-list/add" />
       <DialogBox
         handleClose={handleCloseDialog}

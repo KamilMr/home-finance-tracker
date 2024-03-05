@@ -135,9 +135,11 @@ export const {
 export const selectToken = (state) => state.me.token;
 const selectExpensesAll = (state) => state.expenses;
 export const selectExpenses = (number) =>
-  createSelector(selectExpensesAll, (expenses) => {
+  createSelector([selectExpensesAll,selectCategories], (expenses, categories) => {
+    console.log(categories);
     expenses = _.sortBy(expenses, ['date']).map((exp) => ({
       ...exp,
+      category: categories.find(({catId}) => catId === exp.categoryId).category,
       date: format(new Date(exp.date), 'dd/MM/yyyy'),
     }));
     return expenses.reverse().slice(0, number);

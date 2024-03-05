@@ -8,11 +8,10 @@ import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import {Box, Container} from '@mui/system';
 import {
   Button,
-  Table,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TableBody,
+  Card,
+  CardActions,
+  CardContent,
+  CardHeader,
   IconButton,
   Typography,
 } from '@mui/material';
@@ -21,7 +20,6 @@ import {format} from 'date-fns';
 
 import {addIncome, selectIncomes} from '../store';
 import {useFetch} from '../hooks';
-import {TableCell} from '../components/material';
 import AddBtn from '../components/AddBtn';
 
 const IncomeList = () => {
@@ -90,56 +88,35 @@ const IncomeList = () => {
           <Button onClick={handleReload}>Odśwież</Button>
         </Box>
       </Box>
-      <TableContainer>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell sx={{borderBottom: '.1rem solid'}}>Data</TableCell>
-              <TableCell sx={{borderBottom: '.1rem solid'}}>Kwota</TableCell>
-              <TableCell sx={{borderBottom: '.1rem solid'}}>Źródło</TableCell>
-              <TableCell sx={{borderBottom: '.1rem solid'}}>Kto</TableCell>
-              <TableCell sx={{borderBottom: '.1rem solid'}}>Vat</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {_.sortBy(icomes, ['date'])
-              .reverse()
-              .map((income) => (
-                <React.Fragment key={income.id}>
-                  <TableRow>
-                    <TableCell>{format(new Date(income.date), 'dd/MM/yyyy')}</TableCell>
-                    <TableCell>{income.price + ' zł'}</TableCell>
-                    <TableCell>{income.source}</TableCell>
-                    <TableCell>{income.owner}</TableCell>
-                    <TableCell>{income.vat + '%'}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell
-                      sx={{
-                        display: 'flex',
-                        m: 0,
-                        p: 0,
-                        justifyContent: 'flex-end',
-                      }}>
-                      <IconButton
-                        sx={{mr: 3}}
-                        onClick={handleDelete(income.id)}>
-                        <DeleteIcon />
-                      </IconButton>
-                      <IconButton onClick={handleEdit(income.id)}>
-                        <ModeEditIcon />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                </React.Fragment>
-              ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      {_.sortBy(icomes, ['date'])
+        .reverse()
+        .map((income) => (
+          <Card key={income.id} sx={{m: 0, mb: 1, p: 0, textAlign: 'left'}}>
+            <CardHeader
+              subheader={format(new Date(income.date), 'dd/MM/yyyy')}
+            />
+            <CardContent sx={{display: 'flex', flexDirection: 'column'}}>
+              <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+                <Box>
+                  <Typography>{'netto: ' + income.price + ' zł'}</Typography>
+                  <Typography>{income.source}</Typography>
+                </Box>
+                <Box>
+                  <Typography>{income.owner}</Typography>
+                  <Typography>{'vat incl: ' + income.vat + ' %'}</Typography>
+                </Box>
+              </Box>
+            </CardContent>
+            <CardActions sx={{display: 'flex', justifyContent: 'flex-end'}}>
+              <IconButton sx={{mr: 3}} onClick={handleDelete(income.id)}>
+                <DeleteIcon />
+              </IconButton>
+              <IconButton onClick={handleEdit(income.id)}>
+                <ModeEditIcon />
+              </IconButton>
+            </CardActions>
+          </Card>
+        ))}
       <AddBtn path="/income-list/add" />
     </Container>
   );
