@@ -4,7 +4,9 @@ import {useNavigate} from 'react-router-dom';
 
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import FilterListIcon from '@mui/icons-material/FilterList';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import SearchIcon from '@mui/icons-material/Search';
 import {Box, Container} from '@mui/system';
 import {
   Button,
@@ -19,25 +21,70 @@ import {
   CardActions,
   CardContent,
   CardHeader,
+  Paper,
+  InputBase,
+  Divider,
 } from '@mui/material';
 
 import {removeExpense, selectExpenses} from '../store';
 import {useFetch} from '../hooks';
 import AddBtn from '../components/AddBtn';
+import {format} from 'date-fns';
+
+const SearchField = ({handleFilters}) => {
+  const [value, setValue] = useState('');
+  const onChange = e => {
+    const val = e.target.value;
+    if (typeof handleFilters === 'function') {
+      handleFilters(val);
+    }
+    setValue(val);
+  };
+  return (
+    <Paper
+      sx={{
+        p: '2px 4px',
+        display: 'flex',
+        alignItems: 'center',
+        width: 320,
+        m: 2
+      }}>
+      <InputBase
+        sx={{ml: 1, flex: 1}}
+        value={value}
+        placeholder="Szukaj"
+        inputProps={{'aria-label': 'search google maps'}}
+        onChange={onChange}
+      />
+      <IconButton type="button" sx={{p: '10px'}} aria-label="search">
+        <SearchIcon />
+      </IconButton>
+      <Divider sx={{height: 28, m: 0.5}} orientation="vertical" />
+      <IconButton color="primary" sx={{p: '10px'}} aria-label="directions">
+        <FilterListIcon />
+      </IconButton>
+    </Paper>
+  );
+};
 
 const ExpensesList = () => {
   const cf = useFetch();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [number, setNumber] = useState(20);
+  const [number, setNumber] = useState(60);
   const [open, setOpen] = useState(false);
-  const expenses = useSelector(selectExpenses(number));
+  const [filter, setFilter] = useState({txt: ''}); // [txt, categoryid]
+  const expenses = useSelector(selectExpenses(number, filter));
 
   const handleReload = () => setNumber(number + 60);
   const handleEdit = (id) => () => navigate(`/expense-list/${id}`);
   const handleAdd = () => navigate('/expense-list/add');
   const handleOpenDialog = (id) => () => {
     setOpen(id);
+  };
+
+  const handleFilters = val => {
+    setFilter({...filter, txt: val});
   };
 
   const handleConfirmDialog = async () => {
@@ -80,15 +127,23 @@ const ExpensesList = () => {
           justifyContent: 'space-between',
           alignItems: 'center',
         }}>
-        <Badge badgeContent={expenses.length} color="primary">
+        <Badge
+          badgeContent={
+            'Nowe: ' +
+            expenses.filter(
+              (exp) => exp.date === format(new Date(), 'dd/MM/yyyy'),
+            ).length
+          }
+          color="primary">
           <Typography variant="h4">Wydatki</Typography>
         </Badge>
         <Box>
-          <IconButton color="secondary" onClick={handleAdd}>
+          <IconButton color="secondary" onClick={handleAdd} sx={{mr: 2}}>
             <AddIcon />
           </IconButton>
         </Box>
       </Box>
+      <SearchField handleFilters={handleFilters} />
       <Container>
         {expenses.map((exp) => (
           <Card key={exp.id} sx={{m: 0, mb: 1, p: 0, textAlign: 'left'}}>

@@ -134,16 +134,24 @@ export const {
 
 export const selectToken = (state) => state.me.token;
 const selectExpensesAll = (state) => state.expenses;
-export const selectExpenses = (number) =>
-  createSelector([selectExpensesAll,selectCategories], (expenses, categories) => {
-    console.log(categories);
-    expenses = _.sortBy(expenses, ['date']).map((exp) => ({
-      ...exp,
-      category: categories.find(({catId}) => catId === exp.categoryId).category,
-      date: format(new Date(exp.date), 'dd/MM/yyyy'),
-    }));
-    return expenses.reverse().slice(0, number);
-  });
+export const selectExpenses = (number, search) =>
+  createSelector(
+    [selectExpensesAll, selectCategories],
+    (expenses, categories) => {
+      const {txt} = search;
+      expenses = _.sortBy(expenses, ['date']).map((exp) => ({
+        ...exp,
+        category: categories.find(({catId}) => catId === exp.categoryId)
+          .category,
+        date: format(new Date(exp.date), 'dd/MM/yyyy'),
+      }));
+
+      expenses = expenses.filter((exp) =>
+        exp.description.toLowerCase().includes(txt.toLowerCase()),
+      );
+      return expenses.reverse().slice(0, number);
+    },
+  );
 
 export const selectIncomes = (state) => state.income;
 export const selectExpense = (id) =>
