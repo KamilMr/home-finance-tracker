@@ -14,7 +14,7 @@ const emptyState = () => ({
   date: format(new Date(), 'yyyy-MM-dd'),
   price: '',
   source: '',
-  vat: '',
+  vat: 0,
 });
 
 const ExpenseAddEdit = () => {
@@ -27,7 +27,8 @@ const ExpenseAddEdit = () => {
 
   const handleSave = async (d) => {
     const newD = _.omitBy(d, (d) => !d || d === 'undefined');
-    const {date, price, source, vat} = newD;
+    const {date, price, source, vat = 0} = newD;
+
     let resp;
     try {
       resp = await cf({
