@@ -138,7 +138,16 @@ export const selectExpenses = (number, search) =>
   createSelector(
     [selectExpensesAll, selectCategories],
     (expenses, categories) => {
-      const {txt} = search;
+      const filterTxt = (exp, f) => {
+        if (!f) return true;
+        return exp.description.toLowerCase().includes(f.toLowerCase());
+      };
+
+      const filterCat = (exp, f) => {
+        if (!f.length) return true;
+        return f.includes(exp.category);
+      };
+      const {txt, categories: fc} = search;
       expenses = _.sortBy(expenses, ['date']).map((exp) => ({
         ...exp,
         category: categories.find(({catId}) => catId === exp.categoryId)
@@ -146,9 +155,9 @@ export const selectExpenses = (number, search) =>
         date: format(new Date(exp.date), 'dd/MM/yyyy'),
       }));
 
-      expenses = expenses.filter((exp) =>
-        exp.description.toLowerCase().includes(txt.toLowerCase()),
-      );
+      expenses = expenses.filter((exp) => {
+        return filterTxt(exp, txt) && filterCat(exp, fc);
+      });
       return expenses.reverse().slice(0, number);
     },
   );

@@ -26,19 +26,18 @@ import {
   Divider,
 } from '@mui/material';
 
-import {removeExpense, selectExpenses} from '../store';
+import {removeExpense, selectCategories, selectExpenses} from '../store';
 import {useFetch} from '../hooks';
 import AddBtn from '../components/AddBtn';
 import {format} from 'date-fns';
+import MultiSelect from '../components/MultiSelect';
 
-const SearchField = ({handleFilters}) => {
-  const [value, setValue] = useState('');
-  const onChange = e => {
+const SearchField = ({onChange, openFilter, value}) => {
+  const handleChange = (e) => {
     const val = e.target.value;
-    if (typeof handleFilters === 'function') {
-      handleFilters(val);
+    if (typeof onChange === 'function') {
+      onChange(val);
     }
-    setValue(val);
   };
   return (
     <Paper
@@ -46,21 +45,24 @@ const SearchField = ({handleFilters}) => {
         p: '2px 4px',
         display: 'flex',
         alignItems: 'center',
-        width: 320,
-        m: 2
+        mb: 1,
       }}>
       <InputBase
         sx={{ml: 1, flex: 1}}
         value={value}
         placeholder="Szukaj"
         inputProps={{'aria-label': 'search google maps'}}
-        onChange={onChange}
+        onChange={handleChange}
       />
-      <IconButton type="button" sx={{p: '10px'}} aria-label="search">
+      <IconButton type="button" aria-label="search">
         <SearchIcon />
       </IconButton>
       <Divider sx={{height: 28, m: 0.5}} orientation="vertical" />
-      <IconButton color="primary" sx={{p: '10px'}} aria-label="directions">
+      <IconButton
+        color="primary"
+        sx={{p: 1}}
+        aria-label="directions"
+        onClick={openFilter}>
         <FilterListIcon />
       </IconButton>
     </Paper>
@@ -73,9 +75,12 @@ const ExpensesList = () => {
   const dispatch = useDispatch();
   const [number, setNumber] = useState(60);
   const [open, setOpen] = useState(false);
-  const [filter, setFilter] = useState({txt: ''}); // [txt, categoryid]
+  const [openFilter, setOpenFilter] = useState(false);
+  const [filter, setFilter] = useState({txt: '', categories: []}); // [txt, categoryid]
   const expenses = useSelector(selectExpenses(number, filter));
+  const categories = useSelector(selectCategories).map((c) => c.category);
 
+  const handleOpenFilter = () => setOpenFilter(!openFilter);
   const handleReload = () => setNumber(number + 60);
   const handleEdit = (id) => () => navigate(`/expense-list/${id}`);
   const handleAdd = () => navigate('/expense-list/add');
@@ -83,9 +88,16 @@ const ExpensesList = () => {
     setOpen(id);
   };
 
-  const handleFilters = val => {
-    setFilter({...filter, txt: val});
+  const handleFilters = (type) => (val) => {
+    if (type === 'txt') setFilter({...filter, txt: val});
+    else
+      setFilter({
+        ...filter,
+        categories: val.target.value.filter((el) => !!el).slice(-1),
+      });
   };
+
+  const clearFilters = () => setFilter({txt: '', categories: []});
 
   const handleConfirmDialog = async () => {
     try {
@@ -135,15 +147,41 @@ const ExpensesList = () => {
             ).length
           }
           color="primary">
-          <Typography variant="h4">Wydatki</Typography>
+          <Typography variant="h4" sx={{ml: 2, pl: 1}}>
+            Wydatki
+          </Typography>
         </Badge>
         <Box>
-          <IconButton color="secondary" onClick={handleAdd} sx={{mr: 2}}>
+          <IconButton color="primary" onClick={handleAdd} sx={{mr: 2}}>
             <AddIcon />
           </IconButton>
         </Box>
       </Box>
-      <SearchField handleFilters={handleFilters} />
+      <Container sx={{mb: 2}}>
+        <SearchField
+          value={filter.txt}
+          onChange={handleFilters('txt')}
+          openFilter={handleOpenFilter}
+        />
+        {Boolean(openFilter) ? (
+          <MultiSelect
+            checkedArr={filter.categories}
+            items={categories}
+            onChange={handleFilters('cat')}
+            sxProp={{
+              height: 50,
+              width: '100%',
+            }}
+          />
+        ) : null}
+        {filter.txt || filter.categories.length ? (
+          <Box sx={{textAlign: 'right', mt: 1}}>
+            <Button size="small" variant="text" onClick={clearFilters}>
+              Wymaż filtry
+            </Button>
+          </Box>
+        ) : null}
+      </Container>
       <Container>
         {expenses.map((exp) => (
           <Card key={exp.id} sx={{m: 0, mb: 1, p: 0, textAlign: 'left'}}>
