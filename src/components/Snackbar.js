@@ -1,18 +1,17 @@
-import {useEffect, Fragment} from 'react';
-import Button from '@mui/material/Button';
+import {useEffect} from 'react';
 import MuiSnackbar from '@mui/material/Snackbar';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
 import {useDispatch, useSelector} from 'react-redux';
 import {selectSnackbar, setSnackbar} from '../store';
-
-const generateMsg = (msg) => {
-  return msg;
-};
+import {Alert} from '@mui/material';
 
 const Snackbar = () => {
   const dispatch = useDispatch();
-  const {open, type, msg} = useSelector(selectSnackbar);
+  let {open, type = '', msg} = useSelector(selectSnackbar);
+  console.log(type);
+
+  if (!['success', 'info', 'warning', 'error'].includes(type)) type = 'success';
+
+  if (typeof msg !== 'string') msg = '';
 
   const handleClose = (_, reason) => {
     if (reason === 'clickaway') {
@@ -32,31 +31,16 @@ const Snackbar = () => {
     };
   }, [open, type, msg, dispatch]);
 
-  const action = (
-    <Fragment>
-      <Button color="secondary" size="small" onClick={handleClose}>
-        Zamknij
-      </Button>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleClose}>
-        <CloseIcon fontSize="small" />
-      </IconButton>
-    </Fragment>
-  );
-
   return (
-    <div>
-      <MuiSnackbar
-        open={open}
-        autoHideDuration={6000}
+    <MuiSnackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+      <Alert
         onClose={handleClose}
-        message={generateMsg(msg, type)}
-        action={action}
-      />
-    </div>
+        severity={type}
+        variant="filled"
+        sx={{width: '100%'}}>
+        {msg}
+      </Alert>
+    </MuiSnackbar>
   );
 };
 

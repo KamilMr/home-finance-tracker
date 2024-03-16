@@ -44,10 +44,18 @@ const ExpenseAddEdit = () => {
       console.log(err);
     }
     if (!resp.d) {
-      dispatch(setSnackbar({msg: resp.err}));
+      console.log(resp.err.errors);
+      const msg =
+        typeof resp.err === 'string'
+          ? resp.err
+          : typeof resp.err?.errors?.[0] === 'string'
+            ? resp.err?.errors?.[0]
+            : 'Coś poszło nie tak';
+      dispatch(setSnackbar({msg: msg, type: 'error'}));
       return;
     }
 
+    dispatch(setSnackbar({msg: 'Dodano'}));
     navigate('/income-list');
   };
 
@@ -63,6 +71,9 @@ const ExpenseAddEdit = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!!income.price || !!income.source) {
+      dispatch(setSnackbar({msg: 'Czegoś brakuje', type: 'error'}));
+    }
     await handleSave(income);
   };
 
@@ -99,9 +110,7 @@ const ExpenseAddEdit = () => {
         getOptionLabel={(option) => option}
         renderInput={(params) => <TextField {...params} label="Źródło" />}
         onChange={handleSourceChange}
-        value={
-          sources.find((source) => source === income.source) || null
-        }
+        value={sources.find((source) => source === income.source) || null}
       />
       <TextField
         name="vat"

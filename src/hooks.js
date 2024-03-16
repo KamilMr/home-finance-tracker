@@ -1,4 +1,4 @@
-import {selectToken, initState} from './store';
+import {selectToken, initState, setSnackbar} from './store';
 import {useDispatch, useSelector} from 'react-redux';
 import {getURL} from './common';
 import {useEffect} from 'react';
@@ -31,6 +31,8 @@ export const useFetchIni = () => {
     cf({path: 'ini'})
       .then((res) => res.json())
       .then((res) => {
+        console.log(res);
+        if (res.err) return dispatch(setSnackbar({msg: res.err, type: 'error'}));
         dispatch(initState(res.d));
       })
       .catch((err) => console.log(err));

@@ -40,7 +40,7 @@ const Login = () => {
       res = await res.json();
     } catch (err) {
       console.log(err);
-      dispatch(setSnackbar({msg: 'Coś poszło nie tak'}));
+      dispatch(setSnackbar({msg: 'Coś poszło nie tak', type: 'error'}));
       return;
     }
 

@@ -20,8 +20,9 @@ export const fetchIni = createAsyncThunk('fetchIni', async (_, thunkAPI) => {
       },
     });
     data = await resp.json();
+    if (data.err) throw data.err;
   } catch (err) {
-    console.log(err);
+    throw err;
   }
   return data.d;
 });
@@ -96,6 +97,7 @@ const mainSlice = createSlice({
       ];
     },
     addIncome: (state, action) => {
+      if (!action.payload?.length) return;
       state.income = action.payload.map((inc) => ({
         ...inc,
         date: format(inc.date, 'yyyy-MM-dd'),
@@ -111,17 +113,23 @@ const mainSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchIni.fulfilled, (state, action) => {
-      state.expenses = action.payload.expenses.map((ex) => ({
-        ...ex,
-        date: format(ex.date, 'yyyy-MM-dd'),
-      }));
-      state.categories = action.payload.categories;
-      state.income = action.payload.income.map((inc) => ({
-        ...inc,
-        date: format(inc.date, 'yyyy-MM-dd'),
-      }));
-    });
+    builder
+      .addCase(fetchIni.fulfilled, (state, action) => {
+        state.expenses = action.payload.expenses.map((ex) => ({
+          ...ex,
+          date: format(ex.date, 'yyyy-MM-dd'),
+        }));
+        state.categories = action.payload.categories;
+        state.income = action.payload.income.map((inc) => ({
+          ...inc,
+          date: format(inc.date, 'yyyy-MM-dd'),
+        }));
+      })
+      .addCase(fetchIni.rejected, (state, action) => {
+        state.snackbar.open = true;
+        state.snackbar.type = 'error';
+        state.snackbar.msg = action.error.message;
+      });
   },
 });
 
