@@ -1,11 +1,11 @@
 import {useState} from 'react';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate, useParams} from 'react-router-dom';
 
 import {Autocomplete, Box, Button, Container, TextField} from '@mui/material';
 import _ from 'lodash';
 
-import {selectIncome} from '../store';
+import {selectIncome, setSnackbar} from '../store';
 import {format} from 'date-fns';
 import {useFetch} from '../hooks';
 
@@ -18,6 +18,7 @@ const emptyState = () => ({
 });
 
 const ExpenseAddEdit = () => {
+  const dispatch = useDispatch();
   const {param} = useParams();
   const cf = useFetch();
   const sources = ['JOB', 'INVESTMENT', 'OTHER'];
@@ -42,7 +43,10 @@ const ExpenseAddEdit = () => {
     } catch (err) {
       console.log(err);
     }
-    if (!resp.d) return;
+    if (!resp.d) {
+      dispatch(setSnackbar({msg: resp.err}));
+      return;
+    }
 
     navigate('/income-list');
   };

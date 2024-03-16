@@ -3,7 +3,7 @@ import {useDispatch} from 'react-redux';
 
 import {Button, TextField, Container, Typography, Box} from '@mui/material';
 
-import {initMe} from './store';
+import {initMe, setSnackbar} from './store';
 import {useNavigate} from 'react-router-dom';
 import {useFetch} from './hooks';
 
@@ -40,10 +40,12 @@ const Login = () => {
       res = await res.json();
     } catch (err) {
       console.log(err);
+      dispatch(setSnackbar({msg: 'Coś poszło nie tak'}));
       return;
     }
 
     if (!res.d) return;
+    dispatch(setSnackbar({msg: 'Zalogowano'}));
     dispatch(initMe(res.d));
     navigate('/');
   };

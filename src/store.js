@@ -42,6 +42,11 @@ const mainSlice = createSlice({
   name: 'main',
   initialState: {
     me: {name: '', email: '', token: ''},
+    snackbar: {
+      open: false,
+      type: 'success',
+      msg: '',
+    },
     expenses: [],
     income: [],
     categories: {},
@@ -50,6 +55,14 @@ const mainSlice = createSlice({
     initMe: (state, action) => {
       const {name = '', email, token} = action.payload;
       Object.assign(state.me, {name, email, token});
+    },
+    setSnackbar: (state, action) => {
+      let {open = false, type = '', msg = ''} = action.payload || {};
+      if (msg) open = true;
+      // state.snackbar.open = open;
+      // state.snackbar.msg = msg;
+      // state.snackbar.type = type;
+      state.snackbar = {type, msg, open};
     },
     initState: (state, action) => {
       state.expenses = action.payload.expenses.map((ex) => ({
@@ -123,15 +136,17 @@ const store = configureStore({
 let persistor = persistStore(store);
 
 export const {
+  addExpense,
+  addIncome,
   dropMe,
   initMe,
-  addExpense,
   initState,
-  addIncome,
   removeExpense,
+  setSnackbar,
   updateExpense,
 } = mainSlice.actions;
 
+export const selectSnackbar = (state) => state.snackbar;
 export const selectToken = (state) => state.me.token;
 const selectExpensesAll = (state) => state.expenses;
 export const selectExpenses = (number, search) =>

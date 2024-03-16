@@ -7,6 +7,7 @@ import AccountMenu from './Nav';
 import BottomNav from './components/BottomNav';
 import ExpenseAddEdit from './screens/ExpenseAddEdit';
 import ExpensesList from './screens/ExpensesList';
+import Snackbar from './components/Snackbar.js';
 import Home from './screens/Home';
 import IncomeAddEdit from './screens/IncomeAddEdit';
 import IncomeList from './screens/IncomeList';
@@ -51,6 +52,7 @@ const router = createBrowserRouter([
       <Protected>
         <Layout>
           <Outlet />
+          <Snackbar />
         </Layout>
       </Protected>
     ),

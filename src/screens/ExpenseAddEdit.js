@@ -9,6 +9,7 @@ import {
   addExpense,
   selectCategories,
   selectExpense,
+  setSnackbar,
   updateExpense,
 } from '../store';
 import {format} from 'date-fns';
@@ -49,7 +50,10 @@ const ExpenseAddEdit = () => {
     } catch (err) {
       console.log(err);
     }
-    if (!resp.d) return;
+    if (!resp.d) {
+      disptach(setSnackbar({msg: resp.err}));
+      return;
+    }
 
     const dispMeth = !isNaN(param) ? updateExpense : addExpense;
     disptach(dispMeth([resp.d]));
