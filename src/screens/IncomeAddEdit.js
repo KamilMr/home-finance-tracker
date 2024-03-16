@@ -1,11 +1,11 @@
 import {useState} from 'react';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate, useParams} from 'react-router-dom';
 
 import {Autocomplete, Box, Button, Container, TextField} from '@mui/material';
 import _ from 'lodash';
 
-import {selectIncome} from '../store';
+import {selectIncome, setSnackbar} from '../store';
 import {format} from 'date-fns';
 import {useFetch} from '../hooks';
 
@@ -18,6 +18,7 @@ const emptyState = () => ({
 });
 
 const ExpenseAddEdit = () => {
+  const dispatch = useDispatch();
   const {param} = useParams();
   const cf = useFetch();
   const sources = ['JOB', 'INVESTMENT', 'OTHER'];
@@ -42,8 +43,19 @@ const ExpenseAddEdit = () => {
     } catch (err) {
       console.log(err);
     }
-    if (!resp.d) return;
+    if (!resp.d) {
+      console.log(resp.err.errors);
+      const msg =
+        typeof resp.err === 'string'
+          ? resp.err
+          : typeof resp.err?.errors?.[0] === 'string'
+            ? resp.err?.errors?.[0]
+            : 'Coś poszło nie tak';
+      dispatch(setSnackbar({msg: msg, type: 'error'}));
+      return;
+    }
 
+    dispatch(setSnackbar({msg: 'Dodano'}));
     navigate('/income-list');
   };
 
@@ -59,6 +71,9 @@ const ExpenseAddEdit = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!!income.price || !!income.source) {
+      dispatch(setSnackbar({msg: 'Czegoś brakuje', type: 'error'}));
+    }
     await handleSave(income);
   };
 
@@ -95,9 +110,7 @@ const ExpenseAddEdit = () => {
         getOptionLabel={(option) => option}
         renderInput={(params) => <TextField {...params} label="Źródło" />}
         onChange={handleSourceChange}
-        value={
-          sources.find((source) => source === income.source) || null
-        }
+        value={sources.find((source) => source === income.source) || null}
       />
       <TextField
         name="vat"

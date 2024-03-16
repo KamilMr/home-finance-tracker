@@ -9,6 +9,7 @@ import {
   addExpense,
   selectCategories,
   selectExpense,
+  setSnackbar,
   updateExpense,
 } from '../store';
 import {format} from 'date-fns';
@@ -25,7 +26,7 @@ const emptyState = () => ({
 });
 
 const ExpenseAddEdit = () => {
-  const disptach = useDispatch();
+  const dispatch = useDispatch();
   const {param} = useParams();
   const cf = useFetch();
   const categories = useSelector(selectCategories);
@@ -49,10 +50,15 @@ const ExpenseAddEdit = () => {
     } catch (err) {
       console.log(err);
     }
-    if (!resp.d) return;
+    if (!resp.d) {
+      dispatch(setSnackbar({msg: resp.err, type: 'error'}));
+      return;
+    }
 
     const dispMeth = !isNaN(param) ? updateExpense : addExpense;
-    disptach(dispMeth([resp.d]));
+
+    dispatch(setSnackbar({msg: 'Dodano'}));
+    dispatch(dispMeth([resp.d]));
     navigate('/expense-list');
   };
 
@@ -63,7 +69,7 @@ const ExpenseAddEdit = () => {
   };
 
   const handleCategoryChange = (_, value) => {
-    setExpense({...expense, categoryId: value.catId});
+    setExpense({...expense, categoryId: value?.catId || ''});
   };
 
   const handleSubmit = async (event) => {
