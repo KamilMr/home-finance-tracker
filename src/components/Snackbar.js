@@ -7,7 +7,6 @@ import {Alert} from '@mui/material';
 const Snackbar = () => {
   const dispatch = useDispatch();
   let {open, type = '', msg} = useSelector(selectSnackbar);
-  console.log(type);
 
   if (!['success', 'info', 'warning', 'error'].includes(type)) type = 'success';
 

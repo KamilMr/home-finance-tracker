@@ -27,6 +27,33 @@ export const fetchIni = createAsyncThunk('fetchIni', async (_, thunkAPI) => {
   return data.d;
 });
 
+export const handleCategory = createAsyncThunk(
+  'handleCategory',
+  async (payload = {}, thunkAPI) => {
+    const {token} = thunkAPI.getState().me;
+
+    if (!Object.keys(payload).length) return;
+
+    const {method, body} = payload;
+    let data;
+    try {
+      let resp = await fetch(getURL('category'), {
+        method,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(body),
+      });
+      data = await resp.json();
+      if (data.err) throw data.err;
+      thunkAPI.dispatch(fetchIni());
+    } catch (err) {
+      throw err;
+    }
+    return data.d;
+  },
+);
+
 const persistConfig = {
   key: 'root',
   storage,
@@ -126,6 +153,11 @@ const mainSlice = createSlice({
         }));
       })
       .addCase(fetchIni.rejected, (state, action) => {
+        state.snackbar.open = true;
+        state.snackbar.type = 'error';
+        state.snackbar.msg = action.error.message;
+      })
+      .addCase(handleCategory.rejected, (state, action) => {
         state.snackbar.open = true;
         state.snackbar.type = 'error';
         state.snackbar.msg = action.error.message;
