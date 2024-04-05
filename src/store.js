@@ -34,15 +34,17 @@ export const handleCategory = createAsyncThunk(
 
     if (!Object.keys(payload).length) return;
 
-    const {method, body} = payload;
+    const {method, id, ...rest} = payload;
+    let q = 'category' + (method === 'PUT' ? `/${id}` : '');
     let data;
     try {
-      let resp = await fetch(getURL('category'), {
+      let resp = await fetch(getURL(q), {
         method,
         headers: {
+          'content-type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(body),
+        body: JSON.stringify(rest),
       });
       data = await resp.json();
       if (data.err) throw data.err;
@@ -151,6 +153,9 @@ const mainSlice = createSlice({
           ...inc,
           date: format(inc.date, 'yyyy-MM-dd'),
         }));
+        state.snackbar.open = true;
+        state.snackbar.type = 'success';
+        state.snackbar.msg = 'Pobrano dane';
       })
       .addCase(fetchIni.rejected, (state, action) => {
         state.snackbar.open = true;
@@ -236,9 +241,13 @@ export const selectIncome = (id) =>
 export const selectCategories = createSelector(
   [(state) => state.categories],
   (cat) => {
-    const arr = Object.values(cat);
-    return arr.reduce((pv, cv) => {
-      if (Array.isArray(pv)) pv.push(...cv.categories);
+    const arr = Object.entries(cat);
+    return arr.reduce((pv, [key, cv]) => {
+      const categories = [...cv.categories].map((obj) => ({
+        ...obj,
+        groupId: key,
+      }));
+      if (Array.isArray(pv)) pv.push(...categories);
       return pv;
     }, []);
   },
