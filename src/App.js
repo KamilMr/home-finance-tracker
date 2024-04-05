@@ -5,18 +5,20 @@ import {Navigate} from 'react-router-dom';
 
 import AccountMenu from './Nav';
 import BottomNav from './components/BottomNav';
+import CategoryLAE from './screens/Category';
 import ExpenseAddEdit from './screens/ExpenseAddEdit';
 import ExpensesList from './screens/ExpensesList';
-import Snackbar from './components/Snackbar.js';
 import Home from './screens/Home';
 import IncomeAddEdit from './screens/IncomeAddEdit';
 import IncomeList from './screens/IncomeList';
 import Login from './Login';
+import Snackbar from './components/Snackbar.js';
 import Summary from './screens/Summary';
 import {createBrowserRouter, RouterProvider, Outlet} from 'react-router-dom';
 import {selectToken} from './store';
 import {useSelector} from 'react-redux';
 import {
+  CATEGORY_LIST_ADD_EDIT_PATH,
   CATS_PATH,
   EXPENSE_ADD_EDIT_PATH,
   EXPENSE_LIST_PATH,
@@ -45,7 +47,7 @@ const Layout = ({children}) => {
   );
 };
 
-const router = createBrowserRouter([
+const routes = createBrowserRouter([
   {
     path: HOME_PATH,
     element: (
@@ -85,6 +87,10 @@ const router = createBrowserRouter([
         path: SUMMARY_PATH,
         element: <Summary />,
       },
+      {
+        path: CATEGORY_LIST_ADD_EDIT_PATH,
+        element: <CategoryLAE />,
+      },
     ],
   },
   {
@@ -94,7 +100,7 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => {
-  return <RouterProvider router={router} defaul />;
+  return <RouterProvider router={routes} />;
 };
 
 export default App;

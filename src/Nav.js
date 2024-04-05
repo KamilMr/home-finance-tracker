@@ -17,6 +17,13 @@ import CachedIcon from '@mui/icons-material/Cached';
 
 import {useFetch, useMediaQ} from './hooks';
 import {selectToken, dropMe, fetchIni} from './store';
+import {
+  CATEGORY_LIST_ADD_EDIT_PATH,
+  CATS_PATH,
+  EXPENSE_LIST_PATH,
+  INCOME_LIST_PATH,
+  SUMMARY_PATH,
+} from './common.js';
 
 const AuthButton = () => {
   const token = useSelector(selectToken);
@@ -87,10 +94,11 @@ const AccountMenu = () => {
   };
 
   const menuItems = [
-    {path: '/summary', title: 'Podsumowanie'},
-    {path: '/income-list', title: 'Wpływy'},
-    {path: '/cats', title: 'Kotki'},
-    {path: '/expense-list', title: 'Wydatki'},
+    {path: SUMMARY_PATH, title: 'Podsumowanie'},
+    {path: INCOME_LIST_PATH, title: 'Wpływy'},
+    {path: CATS_PATH, title: 'Kotki'},
+    {path: EXPENSE_LIST_PATH, title: 'Wydatki'},
+    {path: CATEGORY_LIST_ADD_EDIT_PATH, title: 'Kategorie'},
     // Add more items here
   ];
 
