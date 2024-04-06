@@ -1,7 +1,14 @@
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {handleCategory, selectCategories} from '../store';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import SaveIcon from '@mui/icons-material/Save';
+
+import { handleCategory, selectCategories } from '../store';
 import {
+  Box,
+  IconButton,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -9,7 +16,7 @@ import {
   TableRow,
   TextField,
 } from '@mui/material';
-import {useRef, useState} from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const initialState = () => ({
   color: '',
@@ -25,9 +32,11 @@ const CategoryLAE = () => {
   const [editable, setEditable] = useState(false);
   const oldVal = useRef('');
 
+  const textInputRefs = useRef({});
+
   const handleRowEdit = (id) => () => {
-    const {category, color, groupId} = categories.find((c) => c.catId === id);
-    setState({name: category, color, groupId, id});
+    const { category, color, groupId } = categories.find((c) => c.catId === id);
+    setState({ name: category, color, groupId, id });
     setEditable(id);
     oldVal.current = category;
   };
@@ -35,9 +44,9 @@ const CategoryLAE = () => {
   const handleStop = () => setEditable(false);
 
   const handleSave = () => {
-    const {groupId, name, color, id} = state;
+    const { groupId, name, color, id } = state;
     if (oldVal.current !== name) {
-      dispatch(handleCategory({method: 'PUT', groupId, name, color, id}));
+      dispatch(handleCategory({ method: 'PUT', groupId, name, color, id }));
     }
     handleStop();
     setState(initialState());
@@ -45,48 +54,63 @@ const CategoryLAE = () => {
   };
 
   const handleRowChange = (key) => (data) => {
-    setState({...state, [key]: data.target.value});
+    setState({ ...state, [key]: data.target.value });
   };
 
+  // Focus the text field when 'editable' changes
+  useEffect(() => {
+    // Focus the relevant TextField when 'editable' changes
+    if (editable && textInputRefs.current[editable]) {
+      textInputRefs.current[editable].focus();
+    }
+  }, [editable]);
+
   return (
-    <TableContainer sx={{width: '100%', bgcolor: 'background.paper'}}>
+    <TableContainer sx={{ width: '100%', bgcolor: 'background.paper', p: 1 }}>
       <Table>
         <TableBody>
-          {categories.map((cat) =>
-            editable === cat.catId ? (
-              <TableRow key={cat.catId}>
-                <TableCell
+          {categories.map((cat) => (
+            <TableRow key={cat.catId}>
+              <TableCell sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Box
                   sx={{
-                    width: 20,
-                    height: 20,
+                    width: 60,
+                    height: 60,
                     background: '#' + cat.color || '',
-                  }}></TableCell>
-                <TableCell>
+                  }} />
+                <Box>
                   <TextField
-                    onBlur={handleSave}
+                    onBlur={handleStop}
                     size="small"
-                    value={state.name}
+                    value={editable === cat.catId ? state.name : cat.category}
                     onChange={handleRowChange('name')}
+                    inputRef={(el) => (textInputRefs.current[cat.catId] = el)}
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        // Style for the normal state
+                        '& fieldset': {
+                          border: 'none', // Remove the border
+                        },
+                        // Style when the TextField is focused
+                        '&.Mui-focused fieldset': {
+                          border: '1px solid', // Add border on focus
+                        },
+                      },
+                    }}
                   />
-                </TableCell>
-              </TableRow>
-            ) : (
-              <TableRow key={cat.catId} onClick={handleRowEdit(cat.catId)}>
-                <TableCell
-                  sx={{
-                    width: 20,
-                    height: 20,
-                    background: '#' + cat.color || '',
-                  }}></TableCell>
-                <TableCell>
-                  <TextField
-                    size="small"
-                    value={cat.category}
-                    onChange={handleRowChange('name')}
-                  />
-                </TableCell>
-              </TableRow>
-            ),
+                  <Stack direction={'row'} spacing={1} justifyContent={'end'}>
+                    <IconButton>
+                      <DeleteIcon />
+                    </IconButton>
+                    <IconButton
+                      onClick={editable === cat.catId ? handleSave : handleRowEdit(cat.catId)}>
+                      {editable === cat.catId ? <SaveIcon /> : <EditIcon />}
+                    </IconButton>
+                  </Stack>
+                </Box>
+              </TableCell>
+            </TableRow>
+          ),
           )}
         </TableBody>
       </Table>
