@@ -21,6 +21,7 @@
     "lint-staged": "^15.2.2",
     "localforage": "^1.10.0",
     "lodash": "^4.17.21",
+    "mui-color-input": "^2.0.3",
     "prettier": "^3.2.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

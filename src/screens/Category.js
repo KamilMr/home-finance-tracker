@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
+import CancelIcon from '@mui/icons-material/Cancel';
+import _ from 'lodash';
 
 import { handleCategory, selectCategories } from '../store';
 import {
@@ -17,6 +19,10 @@ import {
   TextField,
 } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
+import AddBtn from '../components/AddBtn';
+import { useParams } from 'react-router-dom';
+import CategoryNew from '../components/CategoryNew';
+import MyComponent from '../components/Picker';
 
 const initialState = () => ({
   color: '',
@@ -26,35 +32,46 @@ const initialState = () => ({
 });
 
 const CategoryLAE = () => {
+  const { param } = useParams();
   const categories = useSelector(selectCategories);
+
   const dispatch = useDispatch();
   const [state, setState] = useState(initialState());
   const [editable, setEditable] = useState(false);
-  const oldVal = useRef('');
+  const oldVal = useRef(initialState());
 
+  const isEqualData = _.isEqual(oldVal.current, state);
   const textInputRefs = useRef({});
 
   const handleRowEdit = (id) => () => {
     const { category, color, groupId } = categories.find((c) => c.catId === id);
     setState({ name: category, color, groupId, id });
     setEditable(id);
-    oldVal.current = category;
+    oldVal.current = { name: category, color, groupId, id };
   };
 
-  const handleStop = () => setEditable(false);
+  const handleStop = () => {
+    oldVal.current = initialState();
+    setState(initialState());
+    setEditable(false);
+  }
 
   const handleSave = () => {
     const { groupId, name, color, id } = state;
-    if (oldVal.current !== name) {
-      dispatch(handleCategory({ method: 'PUT', groupId, name, color, id }));
+    if (!isEqualData) {
+      dispatch(handleCategory({ method: 'PUT', groupId, name, color: color.substring(1), id }));
     }
-    handleStop();
     setState(initialState());
-    oldVal.current = '';
+    setEditable(false);
+    oldVal.current = initialState();
   };
 
   const handleRowChange = (key) => (data) => {
     setState({ ...state, [key]: data.target.value });
+  };
+
+  const handleColorChange = ({ target: { name, value } }) => {
+    setState(state => ({ ...state, color: value }));
   };
 
   // Focus the text field when 'editable' changes
@@ -64,28 +81,39 @@ const CategoryLAE = () => {
       textInputRefs.current[editable].focus();
     }
   }, [editable]);
-
-  return (
+  console.log(editable, state, isEqualData);
+  return param === 'create' ? <CategoryNew /> : (
     <TableContainer sx={{ width: '100%', bgcolor: 'background.paper', p: 1 }}>
       <Table>
         <TableBody>
           {categories.map((cat) => (
             <TableRow key={cat.catId}>
               <TableCell sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <Box
+                <MyComponent
+                  cb={handleColorChange}
+                  editable={editable === cat.catId}
+                  val={editable === cat.catId ? state.color : cat.color}
                   sx={{
-                    width: 60,
-                    height: 60,
-                    background: '#' + cat.color || '',
-                  }} />
+                    '& .MuiButtonBase-root': {
+                      width: 60,
+                      height: 60
+                    },
+                    '& .MuiInputBase-input': {
+                      display: 'none'
+                    },
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      display: 'none'
+                    }
+                  }}
+                />
                 <Box>
                   <TextField
-                    onBlur={handleStop}
+                    // onBlur={oldVal.current.name === state.name ? handleStop : null}
                     size="small"
-                    value={editable === cat.catId ? state.name : cat.category}
+                    value={!!editable && editable === cat.catId ? state.name : cat.category}
                     onChange={handleRowChange('name')}
                     inputRef={(el) => (textInputRefs.current[cat.catId] = el)}
-                    sx={{
+                    sx={{ // change label and border color when readonly
                       '& .MuiOutlinedInput-root': {
                         // Style for the normal state
                         '& fieldset': {
@@ -93,27 +121,33 @@ const CategoryLAE = () => {
                         },
                         // Style when the TextField is focused
                         '&.Mui-focused fieldset': {
-                          border: '1px solid', // Add border on focus
+                          border: editable === cat.catId ? '1px solid' : '', // Add border on focus
                         },
                       },
                     }}
                   />
                   <Stack direction={'row'} spacing={1} justifyContent={'end'}>
-                    <IconButton>
+                    <IconButton disabled={true}>
                       <DeleteIcon />
                     </IconButton>
+                    {editable === cat.catId ? (
+                      <IconButton onClick={handleStop}>
+                        <CancelIcon />
+                      </IconButton>
+                    ) : null}
                     <IconButton
-                      onClick={editable === cat.catId ? handleSave : handleRowEdit(cat.catId)}>
-                      {editable === cat.catId ? <SaveIcon /> : <EditIcon />}
+                      disabled={cat.catId === editable && isEqualData}
+                      onClick={cat.catId === editable ? handleSave : handleRowEdit(cat.catId)}>
+                      {cat.catId === editable ? <SaveIcon /> : <EditIcon />}
                     </IconButton>
                   </Stack>
                 </Box>
               </TableCell>
             </TableRow>
-          ),
-          )}
+          ))}
         </TableBody>
       </Table>
+      <AddBtn path="/category-list/create" />
     </TableContainer>
   );
 };
