@@ -1,6 +1,6 @@
-import {useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import {useNavigate} from 'react-router-dom';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 import {
   AppBar,
@@ -15,8 +15,15 @@ import {
 import MenuIcon from '@mui/icons-material/Menu';
 import CachedIcon from '@mui/icons-material/Cached';
 
-import {useFetch, useMediaQ} from './hooks';
-import {selectToken, dropMe, fetchIni} from './store';
+import { useFetch, useMediaQ } from './hooks';
+import { selectToken, dropMe, fetchIni } from './store';
+import {
+  CATEGORY_LIST_ADD_EDIT_PATH,
+  CATS_PATH,
+  EXPENSE_LIST_PATH,
+  INCOME_LIST_PATH,
+  SUMMARY_PATH,
+} from './common.js';
 
 const AuthButton = () => {
   const token = useSelector(selectToken);
@@ -29,7 +36,7 @@ const AuthButton = () => {
   };
 
   const handleLogout = () => {
-    cf({path: 'users/logout', method: 'POST'});
+    cf({ path: 'users/logout', method: 'POST' });
     dispatch(dropMe());
   };
 
@@ -37,7 +44,7 @@ const AuthButton = () => {
 
   return (
     <>
-      <NavigateButton sx={{ml: 2}} onClick={handleLogout} title="Logout" />
+      <NavigateButton sx={{ ml: 2 }} onClick={handleLogout} title="Logout" />
     </>
   );
 };
@@ -48,13 +55,13 @@ const ReloadButton = () => {
     dispatch(fetchIni());
   };
   return (
-    <IconButton sx={{mr: 2, color: 'white'}} onClick={handleFetchIni}>
+    <IconButton sx={{ mr: 2, color: 'white' }} onClick={handleFetchIni}>
       <CachedIcon />
     </IconButton>
   );
 };
 
-const NavigateButton = ({path, title, cb, ...rest}) => {
+const NavigateButton = ({ path, title, cb, ...rest }) => {
   const navigate = useNavigate();
   const isMobile = useMediaQ('sm');
   const handleNavigate = (path) => (e) => {
@@ -63,7 +70,7 @@ const NavigateButton = ({path, title, cb, ...rest}) => {
   };
   return (
     <Button
-      sx={{my: 1, color: isMobile ? '' : 'white'}}
+      sx={{ my: 1, color: isMobile ? '' : 'white' }}
       onClick={handleNavigate(path)}
       size="small"
       {...rest}>
@@ -87,16 +94,17 @@ const AccountMenu = () => {
   };
 
   const menuItems = [
-    {path: '/summary', title: 'Podsumowanie'},
-    {path: '/income-list', title: 'Wpływy'},
-    {path: '/cats', title: 'Kotki'},
-    {path: '/expense-list', title: 'Wydatki'},
+    { path: SUMMARY_PATH, title: 'Podsumowanie' },
+    { path: INCOME_LIST_PATH, title: 'Wpływy' },
+    { path: CATS_PATH, title: 'Kotki' },
+    { path: EXPENSE_LIST_PATH, title: 'Wydatki' },
+    { path: CATEGORY_LIST_ADD_EDIT_PATH.split('/')[0] + '/list', title: 'Kategorie' },// Here exception is used. 
     // Add more items here
   ];
 
   return (
     <AppBar position="fixed" color="secondary">
-      <Container maxWidth="xl" sx={{textAlign: 'right'}}>
+      <Container maxWidth="xl" sx={{ textAlign: 'right' }}>
         {isMobile ? (
           <>
             <ReloadButton />
