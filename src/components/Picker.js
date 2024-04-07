@@ -6,7 +6,7 @@ const validate = (str) => {
   return str.split('').indexOf('#') > -1 ? str : `#${str}`;
 };
 
-const MyComponent = ({ cb = () => { }, sx, val = '', editable }) => {
+const MyComponent = ({ cb = () => { }, sx, val = '', editable = true }) => {
   const [value, setValue] = useState(validate(val));
 
   const handleChange = (newValue) => {

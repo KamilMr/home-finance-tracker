@@ -37,7 +37,7 @@ const CategoryNew = () => {
   };
 
 
-  const handleStop = () => navigate('/category-list');
+  const handleStop = () => navigate('/category-list/list');
   return (
     <Container
       sx={{

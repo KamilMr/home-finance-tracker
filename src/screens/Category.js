@@ -6,8 +6,9 @@ import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
 import _ from 'lodash';
 
-import { handleCategory, selectCategories } from '../store';
+import { handleCategory, selectCategories, selectMainCategories } from '../store';
 import {
+  Autocomplete,
   Box,
   IconButton,
   Stack,
@@ -40,9 +41,16 @@ const CategoryLAE = () => {
   const [editable, setEditable] = useState(false);
   const oldVal = useRef(initialState());
 
+
+  const mainCat = useSelector(selectMainCategories);
+  const sources = mainCat.map((ar) => ar[0]);
+
+  const handleSourceChange = (_, value) => {
+    setState({ ...state, groupId: mainCat.find(c => c[0] === value)?.[1] || '' });
+  };
+
   const isEqualData = _.isEqual(oldVal.current, state);
   const textInputRefs = useRef({});
-
   const handleRowEdit = (id) => () => {
     const { category, color, groupId } = categories.find((c) => c.catId === id);
     setState({ name: category, color, groupId, id });
@@ -59,7 +67,7 @@ const CategoryLAE = () => {
   const handleSave = () => {
     const { groupId, name, color, id } = state;
     if (!isEqualData) {
-      dispatch(handleCategory({ method: 'PUT', groupId, name, color: color.substring(1), id }));
+      dispatch(handleCategory({ method: 'PUT', groupId, name, color: typeof color === 'string' ? color.substring(1) : null, id }));
     }
     setState(initialState());
     setEditable(false);
@@ -70,7 +78,7 @@ const CategoryLAE = () => {
     setState({ ...state, [key]: data.target.value });
   };
 
-  const handleColorChange = ({ target: { name, value } }) => {
+  const handleColorChange = ({ target: { value } }) => {
     setState(state => ({ ...state, color: value }));
   };
 
@@ -81,7 +89,7 @@ const CategoryLAE = () => {
       textInputRefs.current[editable].focus();
     }
   }, [editable]);
-  console.log(editable, state, isEqualData);
+
   return param === 'create' ? <CategoryNew /> : (
     <TableContainer sx={{ width: '100%', bgcolor: 'background.paper', p: 1 }}>
       <Table>
@@ -108,7 +116,6 @@ const CategoryLAE = () => {
                 />
                 <Box>
                   <TextField
-                    // onBlur={oldVal.current.name === state.name ? handleStop : null}
                     size="small"
                     value={!!editable && editable === cat.catId ? state.name : cat.category}
                     onChange={handleRowChange('name')}
@@ -125,6 +132,16 @@ const CategoryLAE = () => {
                         },
                       },
                     }}
+                  />
+                  <Autocomplete
+                    options={sources}
+                    size="small"
+                    sx={{ mt: 1 }}
+                    disabled={editable !== cat.catId}
+                    getOptionLabel={(option) => option}
+                    renderInput={(params) => <TextField {...params} label="Kategorie" />}
+                    onChange={handleSourceChange}
+                    value={sources.find((source) => source === mainCat.find(mc => mc[1] === (cat.catId === editable ? state.groupId : cat.groupId))?.[0]) || null}
                   />
                   <Stack direction={'row'} spacing={1} justifyContent={'end'}>
                     <IconButton disabled={true}>
