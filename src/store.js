@@ -1,4 +1,4 @@
-import { persistStore, persistReducer } from 'redux-persist';
+import {persistStore, persistReducer} from 'redux-persist';
 import {
   createSlice,
   configureStore,
@@ -6,12 +6,12 @@ import {
   createAsyncThunk,
 } from '@reduxjs/toolkit';
 import storage from 'localforage';
-import { format } from 'date-fns';
-import { getURL, makeNewIdArr } from './common';
+import {format} from 'date-fns';
+import {getURL, makeNewIdArr} from './common';
 import _ from 'lodash';
 
 export const fetchIni = createAsyncThunk('fetchIni', async (_, thunkAPI) => {
-  const { token } = thunkAPI.getState().me;
+  const {token} = thunkAPI.getState().me;
   let data;
   try {
     let resp = await fetch(getURL('ini'), {
@@ -30,11 +30,11 @@ export const fetchIni = createAsyncThunk('fetchIni', async (_, thunkAPI) => {
 export const handleCategory = createAsyncThunk(
   'handleCategory',
   async (payload = {}, thunkAPI) => {
-    const { token } = thunkAPI.getState().me;
+    const {token} = thunkAPI.getState().me;
 
     if (!Object.keys(payload).length) return;
 
-    const { method, id, ...rest } = payload;
+    const {method, id, ...rest} = payload;
     let q = 'category' + (method === 'PUT' ? `/${id}` : '');
     let data;
     try {
@@ -62,7 +62,7 @@ const persistConfig = {
 };
 
 const emptyState = () => ({
-  me: { name: '', email: '', token: '' },
+  me: {name: '', email: '', token: ''},
   expenses: [],
   income: [],
   categories: {},
@@ -71,7 +71,7 @@ const emptyState = () => ({
 const mainSlice = createSlice({
   name: 'main',
   initialState: {
-    me: { name: '', email: '', token: '' },
+    me: {name: '', email: '', token: ''},
     snackbar: {
       open: false,
       type: 'success',
@@ -83,16 +83,16 @@ const mainSlice = createSlice({
   },
   reducers: {
     initMe: (state, action) => {
-      const { name = '', email, token } = action.payload;
-      Object.assign(state.me, { name, email, token });
+      const {name = '', email, token} = action.payload;
+      Object.assign(state.me, {name, email, token});
     },
     setSnackbar: (state, action) => {
-      let { open = false, type = '', msg = '' } = action.payload || {};
+      let {open = false, type = '', msg = ''} = action.payload || {};
       if (msg) open = true;
       // state.snackbar.open = open;
       // state.snackbar.msg = msg;
       // state.snackbar.type = type;
-      state.snackbar = { type, msg, open };
+      state.snackbar = {type, msg, open};
     },
     initState: (state, action) => {
       state.expenses = action.payload.expenses.map((ex) => ({
@@ -175,7 +175,7 @@ const persistedReducer = persistReducer(persistConfig, mainSlice.reducer);
 const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({ serializableCheck: false }),
+    getDefaultMiddleware({serializableCheck: false}),
 });
 
 let persistor = persistStore(store);
@@ -207,10 +207,10 @@ export const selectExpenses = (number, search) =>
         if (!f.length) return true;
         return f.includes(exp.category);
       };
-      const { txt, categories: fc } = search;
+      const {txt, categories: fc} = search;
       expenses = _.sortBy(expenses, ['date']).map((exp) => ({
         ...exp,
-        category: categories.find(({ catId }) => catId === exp.categoryId)
+        category: categories.find(({catId}) => catId === exp.categoryId)
           .category,
         date: format(new Date(exp.date), 'dd/MM/yyyy'),
       }));
@@ -228,7 +228,7 @@ export const selectExpense = (id) =>
     const expense = exp.find((ex) => ex.id === +id);
     if (!expense) return;
     const category = cat.find((obj) => obj.catId === +id)?.category || '';
-    return { ...expense, category };
+    return {...expense, category};
   });
 
 export const selectIncome = (id) =>
@@ -276,25 +276,27 @@ export const selectComparison = (num) =>
     // }
     const tR = {};
     income.forEach((el) => {
-      const { date, price, vat } = el;
+      const {date, price, vat} = el;
       const fd = format(new Date(date), pattern);
-      if (!tR[fd]) tR[fd] = { income: 0, date: fd, outcome: 0 };
+      if (!tR[fd]) tR[fd] = {income: 0, date: fd, outcome: 0};
 
       tR[fd].income += calPrice(price, vat);
+      tR[fd].month = +fd.split('/')[0];
+      tR[fd].year = +fd.split('/')[1];
     });
 
-    expenses.forEach(({ date, price }) => {
+    expenses.forEach(({date, price}) => {
       const fd = format(new Date(date), pattern);
-      if (!tR[fd]) tR[fd] = { income: 0, date: fd, outcome: 0 };
+      if (!tR[fd]) tR[fd] = {income: 0, date: fd, outcome: 0};
       tR[fd].outcome += price;
     });
 
     const arr = Object.values(tR);
     const ids = makeNewIdArr(arr.length);
     arr.forEach((ob, idx) => (ob.id = ids[idx]));
-    return _.sortBy(arr, ['date']);
+    return _.orderBy(arr, ['year', 'month'], ['desc', 'desc']);
   });
 
 export const selectMe = (state) => state.me;
 
-export { store, persistor };
+export {store, persistor};
