@@ -270,10 +270,10 @@ export const selectComparison = (num) =>
     const pattern = +num === 1 ? 'MM/yyyy' : 'yyyy';
     const calPrice = (price, vat = 0) => price - price * (vat / 100);
 
-    // {
-    //  2023: {income, date, outcome}
-    //  11/2023: {income, date, outcome}
-    // }
+    /** {
+      2023: {income, date, outcome}
+      11/2023: {income, date, outcome}
+     }*/
     const tR = {};
     income.forEach((el) => {
       const {date, price, vat} = el;
