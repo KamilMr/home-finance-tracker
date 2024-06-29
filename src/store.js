@@ -275,25 +275,29 @@ export const selectComparison = (num) =>
       11/2023: {income, date, outcome}
      }*/
     const tR = {};
-    income.forEach((el) => {
-      const {date, price, vat} = el;
+    income.forEach((obj) => {
+      const {date, price, vat} = obj;
       const fd = format(new Date(date), pattern);
-      if (!tR[fd]) tR[fd] = {income: 0, date: fd, outcome: 0};
+      if (!tR[fd]) tR[fd] = {income: 0, date: fd, outcome: 0, costs: {}};
 
       tR[fd].income += calPrice(price, vat);
       tR[fd].month = +fd.split('/')[0];
       tR[fd].year = +fd.split('/')[1];
     });
 
-    expenses.forEach(({date, price}) => {
+    // console.log(expenses);
+    expenses.forEach(({date, price, owner, categoryId}) => {
       const fd = format(new Date(date), pattern);
-      if (!tR[fd]) tR[fd] = {income: 0, date: fd, outcome: 0};
+      if (!tR[fd]) tR[fd] = {income: 0, date: fd, outcome: 0, costs: {}};
       tR[fd].outcome += price;
+      tR[fd].costs[owner] ??= 0;
+      tR[fd].costs[owner] += [72, 83].includes(categoryId) ? price : 0;
     });
 
     const arr = Object.values(tR);
     const ids = makeNewIdArr(arr.length);
     arr.forEach((ob, idx) => (ob.id = ids[idx]));
+    // console.log(_.orderBy(arr, ['year', 'month'], ['desc', 'desc']))
     return _.orderBy(arr, ['year', 'month'], ['desc', 'desc']);
   });
 
