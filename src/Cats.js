@@ -1,7 +1,10 @@
+import {Button} from '@mui/material';
+import {Container} from '@mui/system';
 import React, {useState, useEffect} from 'react';
 
-export const Cats = () => {
+export const Cats = ({title = 'Kotki', disableNext}) => {
   const [catData, setCatData] = useState(null);
+  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     fetch('https://cataas.com/cat?json=true')
@@ -11,7 +14,11 @@ export const Cats = () => {
       })
       .catch((error) => console.error('Error fetching data: ', error));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [reload]);
+
+  const handleReload = () => {
+    if (!disableNext) setReload(!reload);
+  };
 
   // Styles for centering the image
   const imageContainerStyle = {
@@ -22,18 +29,19 @@ export const Cats = () => {
   };
 
   return (
-    <div>
-      <h1 style={{textAlign: 'center'}}>Kotki</h1>
+    <Container sx={{textAlign: 'center'}}>
+      <h1 style={{textAlign: 'center'}}>{title}</h1>
       {catData && (
         <div style={imageContainerStyle}>
           <img
             src={`https://cataas.com/cat/${catData._id}`}
             alt="Random Cat"
-            style={{maxWidth: '100%', height: 'auto'}}
+            style={{maxWidth: '100%', maxHeight: 320}}
           />
           <p>Tags: {catData.tags.join(', ')}</p>
         </div>
       )}
-    </div>
+      {!disableNext && <Button onClick={handleReload}>Następny</Button>}
+    </Container>
   );
 };
