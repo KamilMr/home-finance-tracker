@@ -46,7 +46,7 @@ const Config = ({selection, onChange, title}) => {
 
 const Summary = () => {
   const [filter, setFilter] = useState(MONTH);
-  const cards = useSelector(selectComparison(filter));
+  const summary = useSelector(selectComparison(filter));
   const handleChange = (f) => setFilter(f);
 
   return (
@@ -59,12 +59,10 @@ const Summary = () => {
         onChange={handleChange}
         title="Podsumowanie"
       />
-      {cards.map((c) => (
+      {summary.map((c) => (
         <SummaryCard
           key={c.id}
-          income={c.income}
-          outcome={c.outcome}
-          date={c.date}
+          {...c}
         />
       ))}
     </Container>
