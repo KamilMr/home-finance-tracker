@@ -17,42 +17,39 @@ const SummaryCard = ({income, outcome, date, costs, ...rest}) => {
           {date}
         </Typography>
         <Container
-          sx={{display: 'flex', justifyContent: 'space-between', mb: 4, p: 0}}>
+          sx={{display: 'flex', justifyContent: 'space-between', mb: 4, p: 0}}
+        >
           <Box sx={{display: 'flex', alignItems: 'center'}}>
             <ArrowDownwardIcon style={{color: 'green'}} />
             <Box>
               <Box sx={{display: 'flex'}}>
                 <Typography>Wpływy:</Typography>
-                <Tooltip
-                  title={
-                    <>
-                      <Typography>Koszta niewliczone</Typography>
-                      {_.keys(costs).map((name) => (
-                        <Typography
-                          variant="caption"
-                          component="p"
-                          key={
-                            name
-                          }>{`${name}: ${formatPrice(costs[name])}`}</Typography>
-                      ))}
-                    </>
-                  }
-                  sx={{height: 15}}
-                  color="secondary">
-                  <InfoIcon></InfoIcon>
-                </Tooltip>
               </Box>
               <Typography variant="body2">
                 {`${formatPrice(income - sumCosts)} `}
               </Typography>
             </Box>
           </Box>
-          <Box sx={{display: 'flex', alignItems: 'center'}}>
-            <ArrowUpwardIcon style={{color: 'red'}} />
-            <Typography variant="body2">
-              Wydatki: <br />
-              {`${formatPrice(outcome - sumCosts)}`}
-            </Typography>
+          <Box>
+            <Box sx={{display: 'flex', alignItems: 'center'}}>
+              <ArrowUpwardIcon style={{color: 'red'}} />
+              <Typography variant="body2">
+                Wydatki: <br />
+                {`${formatPrice(outcome - sumCosts)}`}
+              </Typography>
+            </Box>
+            <Container sx={{mt:2}}>
+              <Typography variant="caption" component="p">
+                Koszta niewliczone:
+              </Typography>
+              {_.keys(costs).map((name) => (
+                <Typography
+                  variant="caption"
+                  component="p"
+                  key={name}
+                >{`${name}: ${formatPrice(costs[name])}`}</Typography>
+              ))}
+            </Container>
           </Box>
         </Container>
         <Box>{`Saldo: ${formatPrice(income - outcome)}`}</Box>
