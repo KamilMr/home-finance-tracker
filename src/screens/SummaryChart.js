@@ -44,7 +44,7 @@ const Charts = () => {
   const handleRemoveFilters = () => setFilters([]);
 
   const data = {
-    labels: categories,
+    labels: filters,
     datasets: [
       {
         data: filteredData.map((c) => c.v),
