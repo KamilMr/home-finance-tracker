@@ -1,23 +1,36 @@
-import {Card, CardContent, Typography, Container, Tooltip} from '@mui/material';
+import {Card, CardContent, Typography, Container} from '@mui/material';
 import {Box} from '@mui/system';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import InfoIcon from '@mui/icons-material/Info';
 
 import {formatPrice} from '../common';
 import _ from 'lodash';
+import {useNavigate} from 'react-router-dom';
 
-const SummaryCard = ({income, outcome, date, costs, ...rest}) => {
+const SummaryCard = ({income, outcome, date, costs}) => {
+  const navigate = useNavigate();
+
+  const handleNavigate = () => navigate(`/summary/chart/${date.split('/').reverse().join('-')}`);
+
   // the amount of costs total
   const sumCosts = _.sumBy(_.values(costs));
+
   return (
-    <Card sx={{mb: 2}}>
+    <Card
+      sx={{
+        mb: 2,
+        ':hover': {
+          boxShadow: 6,
+        },
+      }}
+    >
       <CardContent sx={{p: 1}}>
         <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
           {date}
         </Typography>
         <Container
           sx={{display: 'flex', justifyContent: 'space-between', mb: 4, p: 0}}
+          onClick={handleNavigate}
         >
           <Box sx={{display: 'flex', alignItems: 'center'}}>
             <ArrowDownwardIcon style={{color: 'green'}} />
@@ -38,7 +51,7 @@ const SummaryCard = ({income, outcome, date, costs, ...rest}) => {
                 {`${formatPrice(outcome - sumCosts)}`}
               </Typography>
             </Box>
-            <Container sx={{mt:2}}>
+            <Container sx={{mt: 2}}>
               <Typography variant="caption" component="p">
                 Koszta niewliczone:
               </Typography>

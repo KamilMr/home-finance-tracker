@@ -11,6 +11,7 @@ export const INCOME_ADD_EDIT_PATH = 'income-list/:param';
 export const INCOME_LIST_PATH = 'income-list';
 export const LOGIN_PATH = 'login';
 export const SUMMARY_PATH = 'summary';
+export const SUMMARY_CHART = 'summary/chart/:param';
 
 export const getURL = (p = '') => {
   return `${URL}/${p}`;

@@ -25,8 +25,10 @@ import {
   HOME_PATH,
   INCOME_ADD_EDIT_PATH,
   INCOME_LIST_PATH,
+  SUMMARY_CHART,
   SUMMARY_PATH,
 } from './common';
+import Charts from './screens/SummaryChart';
 
 const Protected = ({children}) => {
   const token = useSelector(selectToken);
@@ -86,6 +88,10 @@ const routes = createBrowserRouter([
       {
         path: SUMMARY_PATH,
         element: <Summary />,
+      },
+      {
+        path: SUMMARY_CHART,
+        element: <Charts />,
       },
       {
         path: CATEGORY_LIST_ADD_EDIT_PATH,

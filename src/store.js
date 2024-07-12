@@ -301,6 +301,34 @@ export const selectComparison = (num) =>
     return _.orderBy(arr, ['year', 'month'], ['desc', 'desc']);
   });
 
+/** @param {string} date=MM/yyyy*/
+export const aggregateExpenses = (agrDate) =>
+  createSelector(
+    [selectCategories, selectExpensesAll],
+    (categories, expenses) => {
+      const pattern = agrDate.split('/').length > 1 ? 'MM/yyyy' : 'yyyy';
+
+      const tR = {};
+      expenses.forEach(({date, price, categoryId}) => {
+        const cat = categories.find((c) => c.catId === categoryId);
+        tR[categoryId] ??= {
+          v: 0,
+          name: cat.category,
+          color: '#' + cat.color,
+        };
+        const fd = format(new Date(date), pattern);
+
+        tR[categoryId].v += fd === agrDate ? price : 0;
+      });
+
+      return _.orderBy(
+        _.omitBy(tR, (c) => c.v === 0),
+        ['v'],
+        ['desc'],
+      );
+    },
+  );
+
 export const selectMe = (state) => state.me;
 
 export {store, persistor};
