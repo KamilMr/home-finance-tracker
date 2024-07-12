@@ -11,20 +11,20 @@ import {useState} from 'react';
 
 Chart.register(BarElement, CategoryScale, LinearScale, Tooltip);
 
-const chartOptions = (period) => {
-  return {
-    maintainAspectRatio: false,
-    scales: {
-      x: {
-        stacked: true,
-      },
-      y: {
-        stacked: true,
-        suggestedMax: period === 30 ? 60 : period === 60 ? 100 : null,
-      },
-    },
-  };
-};
+// const chartOptions = (period) => {
+//   return {
+//     maintainAspectRatio: false,
+//     scales: {
+//       x: {
+//         stacked: true,
+//       },
+//       y: {
+//         stacked: true,
+//         suggestedMax: period === 30 ? 60 : period === 60 ? 100 : null,
+//       },
+//     },
+//   };
+// };
 
 const Charts = () => {
   const {param} = useParams();
@@ -37,7 +37,9 @@ const Charts = () => {
   );
 
   const setCat = new Set(filters);
-  const filteredData = aggrExpenses.filter((o) => setCat.size ? setCat.has(o.name) : true);
+  const filteredData = aggrExpenses.filter((o) =>
+    setCat.size ? setCat.has(o.name) : true,
+  );
 
   const handleRemoveFilters = () => setFilters([]);
 
