@@ -38,13 +38,13 @@ const Charts = () => {
 
   const setCat = new Set(filters);
   const filteredData = aggrExpenses.filter((o) =>
-    setCat.size ? setCat.has(o.name) : true,
+    setCat.size > 0 ? setCat.has(o.name) : true,
   );
 
   const handleRemoveFilters = () => setFilters([]);
 
   const data = {
-    labels: filters,
+    labels: filteredData.map((o) => o.name),
     datasets: [
       {
         data: filteredData.map((c) => c.v),
