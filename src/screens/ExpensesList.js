@@ -7,30 +7,30 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import SearchIcon from '@mui/icons-material/Search';
+import {format} from 'date-fns';
 import {Box, Container} from '@mui/system';
 import {
-  Button,
-  IconButton,
   Badge,
-  Typography,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
+  Button,
   Card,
   CardActions,
   CardContent,
   CardHeader,
-  Paper,
-  InputBase,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Divider,
+  IconButton,
+  InputBase,
+  Paper,
+  Typography,
 } from '@mui/material';
 
+import AddBtn from '../components/AddBtn';
+import MultiSelect from '../components/MultiSelect';
 import {removeExpense, selectCategories, selectExpenses} from '../store';
 import {useFetch} from '../hooks';
-import AddBtn from '../components/AddBtn';
-import {format} from 'date-fns';
-import MultiSelect from '../components/MultiSelect';
 
 const SearchField = ({onChange, openFilter, value}) => {
   const handleChange = (e) => {

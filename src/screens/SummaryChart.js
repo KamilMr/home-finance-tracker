@@ -8,7 +8,7 @@ import {Button, Container, Typography} from '@mui/material';
 import {aggregateExpenses} from '../store';
 import MultiSelect from '../components/MultiSelect';
 import {useState} from 'react';
-import { formatPrice } from '../common';
+import {formatPrice} from '../common';
 import _ from 'lodash';
 
 Chart.register(BarElement, CategoryScale, LinearScale, Tooltip);

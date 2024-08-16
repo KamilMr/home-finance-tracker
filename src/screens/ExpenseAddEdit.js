@@ -5,6 +5,7 @@ import {useNavigate, useParams} from 'react-router-dom';
 import {Autocomplete, Box, Button, Container, TextField} from '@mui/material';
 import _ from 'lodash';
 
+import ImagesLoader from '../components/ImageLoad';
 import {
   addExpense,
   selectCategories,
@@ -14,7 +15,6 @@ import {
 } from '../store';
 import {format} from 'date-fns';
 import {useFetch} from '../hooks';
-import ImagesLoader from '../components/ImageLoad';
 
 const emptyState = () => ({
   id: '',
@@ -89,7 +89,8 @@ const ExpenseAddEdit = () => {
         mt: 6,
         height: 450,
         justifyContent: 'space-between',
-      }}>
+      }}
+    >
       <TextField
         name="description"
         label="Opis"
@@ -127,7 +128,8 @@ const ExpenseAddEdit = () => {
       <Box
         sx={{
           textAlign: 'right',
-        }}>
+        }}
+      >
         <Button color="error" onClick={handleStop}>
           Przerwij
         </Button>

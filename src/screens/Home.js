@@ -1,10 +1,11 @@
-import {Typography} from '@mui/material';
-import {Container} from '@mui/system';
 import {useSelector} from 'react-redux';
-import { Cats } from '../Cats';
-import AddBtn from '../components/AddBtn';
-import {useFetchIni} from '../hooks';
 
+import {Container} from '@mui/system';
+import {Typography} from '@mui/material';
+
+import AddBtn from '../components/AddBtn';
+import {Cats} from '../Cats';
+import {useFetchIni} from '../hooks';
 import {selectMe} from '../store';
 
 const Home = () => {

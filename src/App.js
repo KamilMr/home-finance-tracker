@@ -1,11 +1,18 @@
 import React from 'react';
+import {
+  Navigate,
+  Outlet,
+  RouterProvider,
+  createBrowserRouter,
+} from 'react-router-dom';
+import {useSelector} from 'react-redux';
+
 import {Box, Container} from '@mui/material';
-import {Cats} from './Cats';
-import {Navigate} from 'react-router-dom';
 
 import AccountMenu from './Nav';
 import BottomNav from './components/BottomNav';
 import CategoryLAE from './screens/Category';
+import Charts from './screens/SummaryChart';
 import ExpenseAddEdit from './screens/ExpenseAddEdit';
 import ExpensesList from './screens/ExpensesList';
 import Home from './screens/Home';
@@ -14,9 +21,8 @@ import IncomeList from './screens/IncomeList';
 import Login from './Login';
 import Snackbar from './components/Snackbar.js';
 import Summary from './screens/Summary';
-import {createBrowserRouter, RouterProvider, Outlet} from 'react-router-dom';
+import {Cats} from './Cats';
 import {selectToken} from './store';
-import {useSelector} from 'react-redux';
 import {
   CATEGORY_LIST_ADD_EDIT_PATH,
   CATS_PATH,
@@ -28,7 +34,6 @@ import {
   SUMMARY_CHART,
   SUMMARY_PATH,
 } from './common';
-import Charts from './screens/SummaryChart';
 
 const Protected = ({children}) => {
   const token = useSelector(selectToken);

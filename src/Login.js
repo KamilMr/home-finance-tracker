@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 import {useDispatch} from 'react-redux';
 
 import {Button, TextField, Container, Typography, Box} from '@mui/material';
 
 import {initMe, setSnackbar} from './store';
-import {useNavigate} from 'react-router-dom';
 import {useFetch} from './hooks';
 
 const EMAIL = process.env.REACT_APP_EMAIL;

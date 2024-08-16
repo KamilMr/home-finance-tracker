@@ -4,8 +4,8 @@ import {useSelector} from 'react-redux';
 import {ButtonGroup, Typography, Button} from '@mui/material';
 import {Container} from '@mui/system';
 
-import {selectComparison} from '../store';
 import SummaryCard from '../components/SummaryCard';
+import {selectComparison} from '../store';
 
 const MONTH = 1;
 const YEAR = 12;
@@ -27,7 +27,8 @@ const Config = ({selection, onChange, title}) => {
         flexDirection: 'column',
         alignItems: 'flex-end',
         mb: 2,
-      }}>
+      }}
+    >
       <Typography variant="h4">{title}</Typography>
       <ButtonGroup>
         {selection.map(([f, name], idx) => (
@@ -35,7 +36,8 @@ const Config = ({selection, onChange, title}) => {
             key={f}
             f={f}
             onClick={handleChange}
-            variant={idx === active ? 'contained' : 'outlined'}>
+            variant={idx === active ? 'contained' : 'outlined'}
+          >
             {name}
           </Button>
         ))}
@@ -60,10 +62,7 @@ const Summary = () => {
         title="Podsumowanie"
       />
       {summary.map((c) => (
-        <SummaryCard
-          key={c.id}
-          {...c}
-        />
+        <SummaryCard key={c.id} {...c} />
       ))}
     </Container>
   );

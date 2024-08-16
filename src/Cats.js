@@ -1,6 +1,7 @@
+import React, {useState, useEffect} from 'react';
+
 import {Button} from '@mui/material';
 import {Container} from '@mui/system';
-import React, {useState, useEffect} from 'react';
 
 export const Cats = ({title = 'Kotki', disableNext}) => {
   const [catData, setCatData] = useState(null);
