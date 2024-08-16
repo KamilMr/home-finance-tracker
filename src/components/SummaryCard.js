@@ -10,7 +10,8 @@ import {useNavigate} from 'react-router-dom';
 const SummaryCard = ({income, outcome, date, costs}) => {
   const navigate = useNavigate();
 
-  const handleNavigate = () => navigate(`/summary/chart/${date.split('/').reverse().join('-')}`);
+  const handleNavigate = () =>
+    navigate(`/summary/chart/${date.split('/').reverse().join('-')}`);
 
   // the amount of costs total
   const sumCosts = _.sumBy(_.values(costs));
@@ -39,7 +40,7 @@ const SummaryCard = ({income, outcome, date, costs}) => {
                 <Typography>Wpływy:</Typography>
               </Box>
               <Typography variant="body2">
-                {`${formatPrice(income - sumCosts)} `}
+                {`${formatPrice(income - sumCosts < 0 ? 0 : income - sumCosts)} `}
               </Typography>
             </Box>
           </Box>
