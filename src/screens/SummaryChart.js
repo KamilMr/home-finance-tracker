@@ -3,13 +3,13 @@ import {useParams} from 'react-router-dom';
 
 import {Bar} from 'react-chartjs-2';
 import {BarElement, CategoryScale, Chart, LinearScale, Tooltip} from 'chart.js';
-import {Button, Container, Typography} from '@mui/material';
+import {Container, Typography} from '@mui/material';
 
 import {aggregateExpenses} from '../store';
-import MultiSelect from '../components/MultiSelect';
 import {useState} from 'react';
-import { formatPrice } from '../common';
+import {formatPrice} from '../common';
 import _ from 'lodash';
+import SortFilter from '../components/SortFilter';
 
 Chart.register(BarElement, CategoryScale, LinearScale, Tooltip);
 
@@ -60,16 +60,15 @@ const Charts = () => {
   const value = _.sumBy(filteredData, 'v');
 
   return (
-    <Container>
-      <MultiSelect
-        sxProp={{width: 320}}
-        checkedArr={filters}
-        items={categories}
-        onChange={(e) => setFilters(e.target.value)}
+    <Container sx={{}}>
+      <SortFilter
+        filters={filters}
+        setFilters={setFilters}
+        handleRemoveFilters={handleRemoveFilters}
+        categories={categories}
       />
-      <Button onClick={handleRemoveFilters}>Usuń filtry</Button>
       <Typography>Całość: {formatPrice(value)}</Typography>
-      <Bar data={data} height={'400px'} />
+      <Bar data={data} />
     </Container>
   );
 };
