@@ -74,7 +74,7 @@ const Charts = () => {
         categories={categories}
       />
       <Typography>Całość: {formatPrice(value)}</Typography>
-      <Bar data={data} />
+      <Bar data={data} height={'400px'} />
     </Container>
   );
 };
