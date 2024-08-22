@@ -4,9 +4,9 @@ import {useNavigate, useParams} from 'react-router-dom';
 
 import {Autocomplete, Box, Button, Container, TextField} from '@mui/material';
 import _ from 'lodash';
+import {format} from 'date-fns';
 
 import {selectIncome, setSnackbar} from '../store';
-import {format} from 'date-fns';
 import {useFetch} from '../hooks';
 
 const emptyState = () => ({
@@ -87,7 +87,8 @@ const ExpenseAddEdit = () => {
         mt: 6,
         height: 450,
         justifyContent: 'space-between',
-      }}>
+      }}
+    >
       <TextField
         name="date"
         label="Data"
@@ -122,7 +123,8 @@ const ExpenseAddEdit = () => {
       <Box
         sx={{
           textAlign: 'right',
-        }}>
+        }}
+      >
         <Button color="error" onClick={handleStop}>
           Przerwij
         </Button>

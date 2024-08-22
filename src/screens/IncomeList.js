@@ -18,9 +18,9 @@ import {
 import _ from 'lodash';
 import {format} from 'date-fns';
 
+import AddBtn from '../components/AddBtn';
 import {addIncome, selectIncomes} from '../store';
 import {useFetch} from '../hooks';
-import AddBtn from '../components/AddBtn';
 
 const IncomeList = () => {
   const cf = useFetch();

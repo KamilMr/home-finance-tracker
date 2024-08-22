@@ -9,7 +9,7 @@ const MultiSelect = ({checkedArr = [], onChange, items = [], sxProp = {}}) => {
       displayEmpty
       value={checkedArr}
       onChange={onChange}
-      renderValue={selected =>
+      renderValue={(selected) =>
         selected.length === 0 ? (
           <p css={{color: 'grey'}}>Wszystkie widać</p>
         ) : (
@@ -17,7 +17,7 @@ const MultiSelect = ({checkedArr = [], onChange, items = [], sxProp = {}}) => {
         )
       }
     >
-      {items.map(item => (
+      {items.map((item) => (
         <MenuItem key={item} value={item}>
           <Checkbox color="primary" checked={checkedArr.includes(item)} />
           <ListItemText primary={item} />

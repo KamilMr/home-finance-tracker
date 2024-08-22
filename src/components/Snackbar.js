@@ -1,6 +1,7 @@
 import {useEffect} from 'react';
-import MuiSnackbar from '@mui/material/Snackbar';
 import {useDispatch, useSelector} from 'react-redux';
+
+import MuiSnackbar from '@mui/material/Snackbar';
 import {selectSnackbar, setSnackbar} from '../store';
 import {Alert} from '@mui/material';
 
@@ -36,7 +37,8 @@ const Snackbar = () => {
         onClose={handleClose}
         severity={type}
         variant="filled"
-        sx={{width: '100%'}}>
+        sx={{width: '100%'}}
+      >
         {msg}
       </Alert>
     </MuiSnackbar>

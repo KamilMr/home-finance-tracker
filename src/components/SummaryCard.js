@@ -1,11 +1,12 @@
-import {Card, CardContent, Typography, Container} from '@mui/material';
-import {Box} from '@mui/system';
+import {useNavigate} from 'react-router-dom';
+
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import {Card, CardContent, Typography, Container} from '@mui/material';
+import {Box} from '@mui/system';
+import _ from 'lodash';
 
 import {formatPrice} from '../common';
-import _ from 'lodash';
-import {useNavigate} from 'react-router-dom';
 
 const SummaryCard = ({income, outcome, date, costs}) => {
   const navigate = useNavigate();
