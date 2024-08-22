@@ -9,6 +9,7 @@ import storage from 'localforage';
 import {format} from 'date-fns';
 import {getURL, makeNewIdArr} from './common';
 import _ from 'lodash';
+import {dh} from './utils';
 
 export const fetchIni = createAsyncThunk('fetchIni', async (_, thunkAPI) => {
   const {token} = thunkAPI.getState().me;
@@ -95,7 +96,7 @@ const mainSlice = createSlice({
       state.snackbar = {type, msg, open};
     },
     initState: (state, action) => {
-      state.expenses = action.payload.expenses.map((ex) => ({
+      state.expenses = action.payload.expenses.map(ex => ({
         ...ex,
         date: format(ex.date, 'yyyy-MM-dd'),
       }));
@@ -105,7 +106,7 @@ const mainSlice = createSlice({
     addExpense: (state, action) => {
       state.expenses = [
         ...state.expenses,
-        ...action.payload.map((ex) => ({
+        ...action.payload.map(ex => ({
           ...ex,
           date: format(ex.date, 'yyyy-MM-dd'),
         })),
@@ -113,13 +114,13 @@ const mainSlice = createSlice({
     },
     updateExpense: (state, action) => {
       const exp = action.payload;
-      const expIdx = state.expenses.findIndex((ex) => ex.id === exp[0].id);
+      const expIdx = state.expenses.findIndex(ex => ex.id === exp[0].id);
       const stateNew = state.expenses.slice();
       stateNew.splice(expIdx, 1);
 
       state.expenses = [
         ...stateNew,
-        ...exp.map((ex) => ({
+        ...exp.map(ex => ({
           ...ex,
           date: format(ex.date, 'yyyy-MM-dd'),
         })),
@@ -127,7 +128,7 @@ const mainSlice = createSlice({
     },
     addIncome: (state, action) => {
       if (!action.payload?.length) return;
-      state.income = action.payload.map((inc) => ({
+      state.income = action.payload.map(inc => ({
         ...inc,
         date: format(inc.date, 'yyyy-MM-dd'),
       }));
@@ -136,20 +137,18 @@ const mainSlice = createSlice({
       return emptyState();
     },
     removeExpense: (state, action) => {
-      state.expenses = state.expenses.filter(
-        (exp) => exp.id !== action.payload,
-      );
+      state.expenses = state.expenses.filter(exp => exp.id !== action.payload);
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       .addCase(fetchIni.fulfilled, (state, action) => {
-        state.expenses = action.payload.expenses.map((ex) => ({
+        state.expenses = action.payload.expenses.map(ex => ({
           ...ex,
           date: format(ex.date, 'yyyy-MM-dd'),
         }));
         state.categories = action.payload.categories;
-        state.income = action.payload.income.map((inc) => ({
+        state.income = action.payload.income.map(inc => ({
           ...inc,
           date: format(inc.date, 'yyyy-MM-dd'),
         }));
@@ -174,7 +173,7 @@ const persistedReducer = persistReducer(persistConfig, mainSlice.reducer);
 
 const store = configureStore({
   reducer: persistedReducer,
-  middleware: (getDefaultMiddleware) =>
+  middleware: getDefaultMiddleware =>
     getDefaultMiddleware({serializableCheck: false}),
 });
 
@@ -191,9 +190,9 @@ export const {
   updateExpense,
 } = mainSlice.actions;
 
-export const selectSnackbar = (state) => state.snackbar;
-export const selectToken = (state) => state.me.token;
-const selectExpensesAll = (state) => state.expenses;
+export const selectSnackbar = state => state.snackbar;
+export const selectToken = state => state.me.token;
+const selectExpensesAll = state => state.expenses;
 export const selectExpenses = (number, search) =>
   createSelector(
     [selectExpensesAll, selectCategories],
@@ -208,42 +207,42 @@ export const selectExpenses = (number, search) =>
         return f.includes(exp.category);
       };
       const {txt, categories: fc} = search;
-      expenses = _.sortBy(expenses, ['date']).map((exp) => ({
+      expenses = _.sortBy(expenses, ['date']).map(exp => ({
         ...exp,
         category: categories.find(({catId}) => catId === exp.categoryId)
           .category,
         date: format(new Date(exp.date), 'dd/MM/yyyy'),
       }));
 
-      expenses = expenses.filter((exp) => {
+      expenses = expenses.filter(exp => {
         return filterTxt(exp, txt) && filterCat(exp, fc);
       });
       return expenses.reverse().slice(0, number);
     },
   );
 
-export const selectIncomes = (state) => state.income;
-export const selectExpense = (id) =>
+export const selectIncomes = state => state.income;
+export const selectExpense = id =>
   createSelector([selectCategories, selectExpensesAll], (cat, exp) => {
-    const expense = exp.find((ex) => ex.id === +id);
+    const expense = exp.find(ex => ex.id === +id);
     if (!expense) return;
-    const category = cat.find((obj) => obj.catId === +id)?.category || '';
+    const category = cat.find(obj => obj.catId === +id)?.category || '';
     return {...expense, category};
   });
 
-export const selectIncome = (id) =>
-  createSelector([selectIncomes], (inc) => {
-    const income = inc.find((inc) => inc.id === +id);
+export const selectIncome = id =>
+  createSelector([selectIncomes], inc => {
+    const income = inc.find(inc => inc.id === +id);
     if (!income) return;
     return income;
   });
 
 export const selectCategories = createSelector(
-  [(state) => state.categories],
-  (cat) => {
+  [state => state.categories],
+  cat => {
     const arr = Object.entries(cat);
     return arr.reduce((pv, [key, cv]) => {
-      const categories = [...cv.categories].map((obj) => ({
+      const categories = [...cv.categories].map(obj => ({
         ...obj,
         groupId: key,
       }));
@@ -254,8 +253,8 @@ export const selectCategories = createSelector(
 );
 
 export const selectMainCategories = createSelector(
-  [(state) => state.categories],
-  (cat) => {
+  [state => state.categories],
+  cat => {
     const arr = Object.entries(cat);
     return arr.reduce((pv, [key, cv]) => {
       const categories = [cv.groupName, key];
@@ -265,7 +264,7 @@ export const selectMainCategories = createSelector(
   },
 );
 
-export const selectComparison = (num) =>
+export const selectComparison = num =>
   createSelector([selectIncomes, selectExpensesAll], (income, expenses) => {
     const pattern = +num === 1 ? 'MM/yyyy' : 'yyyy';
     const calPrice = (price, vat = 0) => price - price * (vat / 100);
@@ -275,7 +274,7 @@ export const selectComparison = (num) =>
       11/2023: {income, date, outcome}
      }*/
     const tR = {};
-    income.forEach((obj) => {
+    income.forEach(obj => {
       const {date, price, vat} = obj;
       const fd = format(new Date(date), pattern);
       if (!tR[fd]) tR[fd] = {income: 0, date: fd, outcome: 0, costs: {}};
@@ -302,33 +301,33 @@ export const selectComparison = (num) =>
   });
 
 /** @param {string} date=MM/yyyy*/
-export const aggregateExpenses = (agrDate) =>
+export const aggregateExpenses = (agrDates = [new Date(), new Date()]) =>
   createSelector(
     [selectCategories, selectExpensesAll],
     (categories, expenses) => {
-      const pattern = agrDate.split('/').length > 1 ? 'MM/yyyy' : 'yyyy';
+      const [startDate, endDate] = agrDates;
 
       const tR = {};
       expenses.forEach(({date, price, categoryId}) => {
-        const cat = categories.find((c) => c.catId === categoryId);
+        if (!dh.isBetweenDates(date, startDate, endDate)) return;
+        const cat = categories.find(c => c.catId === categoryId);
         tR[categoryId] ??= {
           v: 0,
           name: cat.category,
           color: '#' + cat.color,
         };
-        const fd = format(new Date(date), pattern);
 
-        tR[categoryId].v += fd === agrDate ? price : 0;
+        tR[categoryId].v += price;
       });
 
       return _.orderBy(
-        _.omitBy(tR, (c) => c.v === 0),
+        _.omitBy(tR, c => c.v === 0),
         ['v'],
         ['desc'],
       );
     },
   );
 
-export const selectMe = (state) => state.me;
+export const selectMe = state => state.me;
 
 export {store, persistor};

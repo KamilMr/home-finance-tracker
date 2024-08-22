@@ -4,10 +4,7 @@ import {useNavigate} from 'react-router-dom';
 
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
-import FilterListIcon from '@mui/icons-material/FilterList';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
-import SearchIcon from '@mui/icons-material/Search';
-import {format} from 'date-fns';
 import {Box, Container} from '@mui/system';
 import {
   Badge,
@@ -20,54 +17,16 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Divider,
   IconButton,
-  InputBase,
-  Paper,
   Typography,
 } from '@mui/material';
 
 import AddBtn from '../components/AddBtn';
 import MultiSelect from '../components/MultiSelect';
+import SearchField from '../components/SearchField';
+import {format} from 'date-fns';
 import {removeExpense, selectCategories, selectExpenses} from '../store';
 import {useFetch} from '../hooks';
-
-const SearchField = ({onChange, openFilter, value}) => {
-  const handleChange = (e) => {
-    const val = e.target.value;
-    if (typeof onChange === 'function') {
-      onChange(val);
-    }
-  };
-  return (
-    <Paper
-      sx={{
-        p: '2px 4px',
-        display: 'flex',
-        alignItems: 'center',
-        mb: 1,
-      }}>
-      <InputBase
-        sx={{ml: 1, flex: 1}}
-        value={value}
-        placeholder="Szukaj"
-        inputProps={{'aria-label': 'search google maps'}}
-        onChange={handleChange}
-      />
-      <IconButton type="button" aria-label="search">
-        <SearchIcon />
-      </IconButton>
-      <Divider sx={{height: 28, m: 0.5}} orientation="vertical" />
-      <IconButton
-        color="primary"
-        sx={{p: 1}}
-        aria-label="directions"
-        onClick={openFilter}>
-        <FilterListIcon />
-      </IconButton>
-    </Paper>
-  );
-};
 
 const ExpensesList = () => {
   const cf = useFetch();
@@ -78,22 +37,22 @@ const ExpensesList = () => {
   const [openFilter, setOpenFilter] = useState(false);
   const [filter, setFilter] = useState({txt: '', categories: []}); // [txt, categoryid]
   const expenses = useSelector(selectExpenses(number, filter));
-  const categories = useSelector(selectCategories).map((c) => c.category);
+  const categories = useSelector(selectCategories).map(c => c.category);
 
   const handleOpenFilter = () => setOpenFilter(!openFilter);
   const handleReload = () => setNumber(number + 60);
-  const handleEdit = (id) => () => navigate(`/expense-list/${id}`);
+  const handleEdit = id => () => navigate(`/expense-list/${id}`);
   const handleAdd = () => navigate('/expense-list/add');
-  const handleOpenDialog = (id) => () => {
+  const handleOpenDialog = id => () => {
     setOpen(id);
   };
 
-  const handleFilters = (type) => (val) => {
+  const handleFilters = type => val => {
     if (type === 'txt') setFilter({...filter, txt: val});
     else
       setFilter({
         ...filter,
-        categories: val.target.value.filter((el) => !!el).slice(-1),
+        categories: val.target.value.filter(el => !!el).slice(-1),
       });
   };
 
@@ -112,13 +71,13 @@ const ExpensesList = () => {
   const handleCloseDialog = async () => {
     setOpen(false);
   };
-  const handleDelete = async (id) => {
+  const handleDelete = async id => {
     let resp;
     try {
       resp = await cf({
         path: `expenses/${id}`,
         method: 'DELETE',
-      }).then((res) => res.json());
+      }).then(res => res.json());
     } catch (err) {
       console.log(err);
       return;
@@ -138,15 +97,17 @@ const ExpensesList = () => {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-        }}>
+        }}
+      >
         <Badge
           badgeContent={
             'Nowe: ' +
             expenses.filter(
-              (exp) => exp.date === format(new Date(), 'dd/MM/yyyy'),
+              exp => exp.date === format(new Date(), 'dd/MM/yyyy'),
             ).length
           }
-          color="primary">
+          color="primary"
+        >
           <Typography variant="h4" sx={{ml: 2, pl: 1}}>
             Wydatki
           </Typography>
@@ -183,7 +144,7 @@ const ExpensesList = () => {
         ) : null}
       </Container>
       <Container>
-        {expenses.map((exp) => (
+        {expenses.map(exp => (
           <Card key={exp.id} sx={{m: 0, mb: 1, p: 0, textAlign: 'left'}}>
             <CardHeader subheader={exp.description} />
             <CardContent sx={{display: 'flex', flexDirection: 'column'}}>
