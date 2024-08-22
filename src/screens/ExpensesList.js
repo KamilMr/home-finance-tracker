@@ -4,9 +4,7 @@ import {useNavigate} from 'react-router-dom';
 
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
-import FilterListIcon from '@mui/icons-material/FilterList';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
-import SearchIcon from '@mui/icons-material/Search';
 import {Box, Container} from '@mui/system';
 import {
   Button,
@@ -21,9 +19,6 @@ import {
   CardActions,
   CardContent,
   CardHeader,
-  Paper,
-  InputBase,
-  Divider,
 } from '@mui/material';
 
 import {removeExpense, selectCategories, selectExpenses} from '../store';
@@ -31,43 +26,7 @@ import {useFetch} from '../hooks';
 import AddBtn from '../components/AddBtn';
 import {format} from 'date-fns';
 import MultiSelect from '../components/MultiSelect';
-
-const SearchField = ({onChange, openFilter, value}) => {
-  const handleChange = (e) => {
-    const val = e.target.value;
-    if (typeof onChange === 'function') {
-      onChange(val);
-    }
-  };
-  return (
-    <Paper
-      sx={{
-        p: '2px 4px',
-        display: 'flex',
-        alignItems: 'center',
-        mb: 1,
-      }}>
-      <InputBase
-        sx={{ml: 1, flex: 1}}
-        value={value}
-        placeholder="Szukaj"
-        inputProps={{'aria-label': 'search google maps'}}
-        onChange={handleChange}
-      />
-      <IconButton type="button" aria-label="search">
-        <SearchIcon />
-      </IconButton>
-      <Divider sx={{height: 28, m: 0.5}} orientation="vertical" />
-      <IconButton
-        color="primary"
-        sx={{p: 1}}
-        aria-label="directions"
-        onClick={openFilter}>
-        <FilterListIcon />
-      </IconButton>
-    </Paper>
-  );
-};
+import SearchField from '../components/SearchField';
 
 const ExpensesList = () => {
   const cf = useFetch();
