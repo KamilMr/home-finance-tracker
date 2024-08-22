@@ -10,6 +10,7 @@ import {useState} from 'react';
 import {formatPrice} from '../common';
 import _ from 'lodash';
 import SortFilter from '../components/SortFilter';
+import {lastDayOfMonth} from 'date-fns';
 
 Chart.register(BarElement, CategoryScale, LinearScale, Tooltip);
 
@@ -30,28 +31,30 @@ Chart.register(BarElement, CategoryScale, LinearScale, Tooltip);
 
 const Charts = () => {
   const {param} = useParams();
-  const aggrExpenses = useSelector(
-    aggregateExpenses(param.split('-').reverse().join('/')),
-  );
-  const categories = aggrExpenses.map((o) => o.name);
+  const [filterDates, setFilterDates] = useState([
+    new Date(param + '-01'),
+    new Date(lastDayOfMonth(new Date(param + '-01'))),
+  ]);
+  const aggrExpenses = useSelector(aggregateExpenses(filterDates));
+  const categories = aggrExpenses.map(o => o.name);
   const [filters, setFilters] = useState(
-    categories.filter((c) => !['Koszta kamil', 'Koszta Aga'].includes(c)),
+    categories.filter(c => !['Koszta kamil', 'Koszta Aga'].includes(c)),
   );
 
   const setCat = new Set(filters);
-  const filteredData = aggrExpenses.filter((o) =>
+  const filteredData = aggrExpenses.filter(o =>
     setCat.size > 0 ? setCat.has(o.name) : true,
   );
 
   const handleRemoveFilters = () => setFilters([]);
 
   const data = {
-    labels: filteredData.map((o) => o.name),
+    labels: filteredData.map(o => o.name),
     datasets: [
       {
-        data: filteredData.map((c) => c.v),
-        backgroundColor: filteredData.map((c) => c.color),
-        borderColor: filteredData.map((c) => c.color),
+        data: filteredData.map(c => c.v),
+        backgroundColor: filteredData.map(c => c.color),
+        borderColor: filteredData.map(c => c.color),
         borderWidth: 1,
       },
     ],
@@ -59,9 +62,12 @@ const Charts = () => {
 
   const value = _.sumBy(filteredData, 'v');
 
+  console.log(filterDates);
   return (
     <Container sx={{}}>
       <SortFilter
+        filterDates={filterDates}
+        setFilterDates={setFilterDates}
         filters={filters}
         setFilters={setFilters}
         handleRemoveFilters={handleRemoveFilters}

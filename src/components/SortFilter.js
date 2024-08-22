@@ -35,13 +35,29 @@ const CustomDatePicker = ({
   );
 };
 
-const SortFilter = ({filters, setFilters, handleRemoveFilters, categories}) => {
-  const [selectedStartDate, setSelectedStartDate] = useState(new Date(format(new Date(), 'yyyy-MM-01')));
-  const [selectedEndDate, setSelectedEndDate] = useState(new Date());
+// TODO: Review logic in this commit 
+const SortFilter = ({
+  filters,
+  setFilters,
+  handleRemoveFilters,
+  categories,
+  setFilterDates,
+  filterDates,
+}) => {
+  const [selectedStartDate, setSelectedStartDate] = useState(
+    filterDates[0] || new Date(format(new Date(), 'yyyy-MM-01')),
+  );
+  const [selectedEndDate, setSelectedEndDate] = useState(
+    filterDates[1] || new Date(),
+  );
 
   const handleDateChange = when => d => {
-    if (when === 'e') return setSelectedEndDate(d);
+    if (when === 'e') {
+      setFilterDates([filterDates[0], d]);
+      return setSelectedEndDate(d);
+    }
 
+    setFilterDates([d, filterDates[1]]);
     setSelectedStartDate(d);
   };
   return (
